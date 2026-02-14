@@ -5,7 +5,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons"
 
 export default function Navbar() {
     return (
-        <nav className="bg-white shadow-sm border-b border-gray-200">
+        <nav className="bg-white border-b border-gray-200">
             <div className="px-6 h-16 flex items-center justify-between">
 
                 {/* Logo */}

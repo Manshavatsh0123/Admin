@@ -3,71 +3,71 @@
 import * as React from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
 import { StatCard } from "../../../components/global/StatCard"
-import { FilterSection } from "./components/FilterOption"
-import { DataTable } from "./components/DataTable"
-import { StatusBadge } from "./components/StatusBadge"
-import type { ColumnDef } from "./components/DataTable"
-import CreateSubjectForm from "./components/CreateSubjectForm"
-import { Pencil, Trash2 } from "lucide-react"
+import { FilterSection } from "../subject/components/FilterOption"
+import { DataTable } from "../subject/components/DataTable"
+import { StatusBadge } from "../subject/components/StatusBadge"
+import type { ColumnDef } from "../subject/components/DataTable"
+import CreateSubjectForm from "../subject/components/CreateSubjectForm"
+import { Eye, Pencil, Trash2 } from "lucide-react"
+import CreateChapterForm from "./components/CreateChapterForm"
 
 const mockData = [
     {
         id: 1,
-        grade: "Grade 4",
-        subjectName: "Math Basics",
-        level: "GCSE",
+        chapter: "Electricity",
+        subject: "Science",
+        duration: "1 hour",
         status: "active",
     },
     {
         id: 2,
-        grade: "Grade 5",
-        subjectName: "English Literature",
-        level: "Secondary",
+        chapter: "Magnetics",
+        subject: "Science",
+        duration: "1 hour",
         status: "active",
     },
     {
         id: 3,
-        grade: "Grade 7",
-        subjectName: "Science Methods",
-        level: "Primary",
+        chapter: "Natures",
+        subject: "Science",
+        duration: "2 hour",
         status: "active",
     },
     {
         id: 4,
-        grade: "Grade 6",
-        subjectName: "Reasoning Concepts",
-        level: "Primary",
+        chapter: "Electronics",
+        subject: "Science",
+        duration: "3 hour",
         status: "active",
     },
     {
         id: 5,
-        grade: "Grade 5",
-        subjectName: "Reasoning Foundation",
-        level: "Secondary",
+        chapter: "Force",
+        subject: "Science",
+        duration: "2 hour",
         status: "draft",
     },
 ]
 
-const SubjectPage = () => {
 
+const ChapterPage = () => {
     const [isModalOpen, setIsModalOpen] = React.useState(false)
-
 
     const columns: ColumnDef[] = [
         {
-            id: "grade",
-            header: "Grades",
-            accessorKey: "grade",
+            id: "chapter",
+            header: "Chapters",
+            accessorKey: "chapter",
         },
         {
-            id: "subjectName",
-            header: "Subject Name",
-            accessorKey: "subjectName",
+            id: "subject",
+            header: "Subjects",
+            accessorKey: "subject",
         },
         {
-            id: "level",
-            header: "Level",
-            accessorKey: "level",
+            id: "duration",
+            header: "Duration",
+            accessorKey: "duration",
         },
         {
             id: "status",
@@ -102,23 +102,33 @@ const SubjectPage = () => {
                     />
                 </div>
             ),
+        },
+        {
+            id: "resources",
+            header: "Resources",
+            accessorKey: "id",
+            cell: () => (
+                <div className="flex items-center justify-between h-full">
+                    <Eye className="w-4 h-4 text-black cursor-pointer" />
+                </div>
+            ),
         }
-
     ]
 
     return (
         <div className="space-y-6">
+
             <PageInfoBar
-                title="Subject Management"
-                description="Create and manage subjects"
-                actionButtonLabel="Create Subject"
+                title="Chapter Management"
+                description="Create and manage chapters"
+                actionButtonLabel="Create Chapter"
                 onActionClick={() => setIsModalOpen(true)}
             />
 
-            <CreateSubjectForm />
+            <CreateChapterForm />
 
             <div className="grid grid-cols-3 gap-4">
-                <StatCard label="Total Courses" value={18} />
+                <StatCard label="Total Courses" value={5} />
                 <StatCard label="Active Courses" value="7" />
                 <StatCard label="Total Students" value="555" />
             </div>
@@ -143,5 +153,7 @@ const SubjectPage = () => {
     )
 }
 
-export default SubjectPage
+export default ChapterPage
+
+
 

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import AppButton from "./Button";
 
 interface PageInfoBarProps {
   title?: string;
@@ -25,7 +26,7 @@ export default function PageInfoBar({
   const router = useRouter();
 
   return (
-    <div className="flex flex-row justify-between items-start md:items-center gap-5">
+    <div className="flex flex-row justify-between items-start md:items-center gap-1">
 
       {/* Left side */}
       <div className="flex items-center gap-4">
@@ -45,7 +46,7 @@ export default function PageInfoBar({
             {title}
           </h1>
           {description && (
-            <p className="text-[20px] text-gray-500">
+            <p className="text-[20px] text-black">
               {description}
             </p>
           )}
@@ -53,13 +54,13 @@ export default function PageInfoBar({
       </div>
 
       {/* Right side actions */}
-      {actions &&
-        <Button
-          onClick={onActionClick}
-          className="bg-red-600 hover:bg-red-700 text-white"
-        >
-          {actionButtonLabel}
-        </Button>}
+      <div>
+        {actions ? (
+          actions
+        ) : actionButtonLabel ? (
+          <AppButton ctaText="Create Subject" />
+        ) : null}
+      </div>
     </div>
   );
 }
