@@ -1,40 +1,44 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import RecentActivity from "./RecentActivity"
+"use client"
 
-export default function QuickStatsPage() {
-    const stats = [
-        { label: "Total Courses", value: "156" },
-        { label: "Total Tests", value: "2,847" },
-        { label: "Avg Session Duration", value: "58 min" },
-    ]
+interface StatItem {
+    label: string
+    value: string
+}
 
+interface QuickStatsPageProps {
+    stats: StatItem[]
+}
+
+export default function QuickStatsPage({
+    stats,
+}: QuickStatsPageProps) {
     return (
-        <div className="card-padding grid lg:grid-cols-[3fr_1.5fr] gap-4">
+        <div className="cardIcon section-padding">
 
-            {/* Quick Stats */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-[20px] font-semibold">
-                        Quick Stats
-                    </CardTitle>
-                </CardHeader>
+            <h2 className="quickStatsheading">
+                Quick Stats
+            </h2>
 
-                <CardContent className="space-y-0">
-                    {stats.map((stat, index) => (
-                        <div
-                            key={stat.label}
-                            className={`flex items-center justify-between py-4 ${index !== stats.length - 1 ? "border-b border-border" : "" }`}>
-                            <span className="text-[#606060] text-[16px]">{stat.label}</span>
-                            <span className="text-black font-medium text-[16px]">{stat.value}</span>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
+            <div>
+                {stats.map((stat, index) => (
+                    <div
+                        key={stat.label}
+                        className={`flex items-center justify-between py-4 ${index !== stats.length - 1
+                                ? "border-b border-[#E5E7EB]"
+                                : ""
+                            }`}
+                    >
+                        <span className="text-[#606060] text-[16px]">
+                            {stat.label}
+                        </span>
 
-            
-            
-                <RecentActivity />
-            
+                        <span className="text-black text-[16px] font-medium">
+                            {stat.value}
+                        </span>
+                    </div>
+                ))}
+            </div>
+
         </div>
     )
 }

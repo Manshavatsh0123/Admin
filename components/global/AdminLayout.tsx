@@ -15,8 +15,7 @@ export default function AdminLayout({
             {/* Main Layout */}
             <div className="flex min-h-screen">
 
-                {/* Sidebar */}
-                <aside className="w-57.5">
+                <aside className="w-57.5 border-r border-[#E5E7EB]">
                     <Sidebar />
                 </aside>
 

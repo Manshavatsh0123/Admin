@@ -2,14 +2,13 @@
 
 import * as React from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
-import { StatCard } from "../../../components/global/StatCard"
 import { FilterSection } from "../subject/components/FilterOption"
 import { DataTable } from "../subject/components/DataTable"
 import { StatusBadge } from "../subject/components/StatusBadge"
 import type { ColumnDef } from "../subject/components/DataTable"
-import CreateSubjectForm from "../subject/components/CreateSubjectForm"
 import { Eye, Pencil, Trash2 } from "lucide-react"
 import CreateChapterForm from "./components/CreateChapterForm"
+import { StatCard } from "@/components/global/StatCard"
 
 const mockData = [
     {
@@ -116,8 +115,7 @@ const ChapterPage = () => {
     ]
 
     return (
-        <div className="space-y-6">
-
+        <>
             <PageInfoBar
                 title="Chapter Management"
                 description="Create and manage chapters"
@@ -127,7 +125,7 @@ const ChapterPage = () => {
 
             <CreateChapterForm />
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4 card-padding">
                 <StatCard label="Total Courses" value={5} />
                 <StatCard label="Active Courses" value="7" />
                 <StatCard label="Total Students" value="555" />
@@ -149,7 +147,7 @@ const ChapterPage = () => {
             />
 
             <DataTable columns={columns} data={mockData} />
-        </div>
+        </>
     )
 }
 

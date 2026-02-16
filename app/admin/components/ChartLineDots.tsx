@@ -11,22 +11,22 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
-const chartData = [
-  { month: "Jan", revenue: 1000 },
-  { month: "Feb", revenue: 1200 },
-  { month: "Mar", revenue: 1800 },
-  { month: "Apr", revenue: 2100 },
-  { month: "May", revenue: 2600 },
-  { month: "Jun", revenue: 3000 },
-]
+interface ChartLineDotsProps {
+  data: {
+    month: string
+    revenue: number
+  }[]
+}
 
-export function ChartLineDots() {
+export function ChartLineDots({ data }: ChartLineDotsProps) {
   return (
-    <div className="w-full p-6 border rounded-lg p-6.25 shadow-sm mt-7.5 bg-white">
-      <h2 className="text-[20px] font-semibold mb-4">Revenue Trend</h2>
+    <div className="w-full cardIcon section-padding card-padding">
+      <h2 className="text-[20px] font-semibold mb-6.25">
+        Revenue Trend
+      </h2>
 
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={chartData}>
+        <LineChart data={data}>
 
           <CartesianGrid strokeDasharray="3 3" />
 

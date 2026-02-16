@@ -11,8 +11,8 @@ interface PageInfoBarProps {
   description?: string;
   actions?: ReactNode;
   showBack?: boolean;
-  actionButtonLabel?: string
-  onActionClick?: () => void
+  actionButtonLabel?: string;
+  onActionClick?: () => void;
 }
 
 export default function PageInfoBar({
@@ -20,13 +20,13 @@ export default function PageInfoBar({
   description,
   actions,
   showBack = false,
-  actionButtonLabel = "Add New",
+  actionButtonLabel,
   onActionClick,
 }: PageInfoBarProps) {
   const router = useRouter();
 
   return (
-    <div className="flex flex-row justify-between items-start md:items-center gap-1">
+    <div className="flex flex-row justify-between items-start md:items-center">
 
       {/* Left side */}
       <div className="flex items-center gap-4">
@@ -42,11 +42,14 @@ export default function PageInfoBar({
         )}
 
         <div>
-          <h1 className="text-[36px] font-bold">
-            {title}
-          </h1>
+          {title && (
+            <h1 className="heading-main">
+              {title}
+            </h1>
+          )}
+
           {description && (
-            <p className="text-[20px] text-black">
+            <p className="heading-paragraph">
               {description}
             </p>
           )}
@@ -55,12 +58,16 @@ export default function PageInfoBar({
 
       {/* Right side actions */}
       <div>
-        {actions ? (
-          actions
-        ) : actionButtonLabel ? (
-          <AppButton ctaText="Create Subject" />
-        ) : null}
+        {actions
+          ? actions
+          : actionButtonLabel && (
+            <AppButton
+              ctaText={actionButtonLabel}
+              onClick={onActionClick}
+            />
+          )}
       </div>
+
     </div>
   );
 }

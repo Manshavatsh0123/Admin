@@ -1,45 +1,54 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
 
-export default function RecentActivity() {
-    const activities = [
-        {
-            title: "New Student",
-            subtitle: "Rahul Singh",
-            time: "2 hours ago",
-        },
-        {
-            title: "New Tutor",
-            subtitle: "Dr. Priya Sharma",
-            time: "4 hours ago",
-        },
-        {
-            title: "Payment Received",
-            subtitle: "₹5,000",
-            time: "8 hours ago",
-        },
-    ]
+interface ActivityItem {
+  title: string
+  subtitle: string
+  time: string
+}
 
-    return (
-        <Card className="p-6">
-            <h2 className="text-[20px] font-semibold mb-5">Recent Activity</h2>
+interface RecentActivityProps {
+  activities: ActivityItem[]
+}
 
-            <div className="space-y-3">
-                {activities.map((item, index) => (
-                    <div
-                        key={index}
-                        className="flex justify-between items-center border rounded-lg p-4"
-                    >
-                        <div>
-                            <p className="font-medium text-[16px]">{item.title}</p>
-                            <p className="text-[14px] text-[#606060]">{item.subtitle}</p>
-                        </div>
+export default function RecentActivity({
+  activities,
+}: RecentActivityProps) {
+  return (
+    <div className="cardIcon section-padding">
 
-                        <p className="text-[12px] text-[#606060]">{item.time}</p>
-                    </div>
-                ))}
+      <h2 className="quickStatsheading">
+        Recent Activity
+      </h2>
+
+      <div className="space-y-4">
+
+        {activities.map((item, index) => (
+          <div
+            key={index}
+            className="flex justify-between items-center border border-[#E5E7EB] rounded-xl px-4 py-3 bg-white"
+          >
+            {/* Left */}
+            <div>
+              <p className="text-[16px] font-medium text-black">
+                {item.title}
+              </p>
+
+              <p className="text-[14px] text-[#606060]">
+                {item.subtitle}
+              </p>
             </div>
-        </Card>
-    )
+
+            {/* Right */}
+            <p className="text-[12px] text-[#606060] whitespace-nowrap">
+              {item.time}
+            </p>
+
+          </div>
+        ))}
+
+      </div>
+
+    </div>
+  )
 }

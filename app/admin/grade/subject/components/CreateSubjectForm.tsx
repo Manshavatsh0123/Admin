@@ -6,10 +6,9 @@ import SelectField from "@/components/forms/SelectField"
 import TextAreaField from "@/components/forms/TextAreaField"
 import DynamicInputList from "@/components/forms/DynamicInputList"
 import FormSection from "@/components/forms/FormSection"
-
-import ImageDropper from "../../../../components/forms/Select"
 import AppButton from "@/components/global/Button"
-import FileUpload from "../../../../components/forms/Select"
+import FileUpload from "@/components/forms/Select"
+
 
 export default function CreateSubjectForm() {
   return (

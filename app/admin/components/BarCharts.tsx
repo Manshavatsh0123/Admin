@@ -11,25 +11,25 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
-const chartData = [
-  { month: "Jan", Students: 8, Tutors: 5, Parents: 12 },
-  { month: "Feb", Students: 22, Tutors: 6, Parents: 15 },
-  { month: "Mar", Students: 28, Tutors: 10, Parents: 18 },
-  { month: "Apr", Students: 35, Tutors: 12, Parents: 25 },
-  { month: "May", Students: 42, Tutors: 15, Parents: 28 },
-  { month: "Jun", Students: 62, Tutors: 22, Parents: 18 },
-]
+interface BarChartsProps {
+  data: {
+    month: string
+    Students: number
+    Tutors: number
+    Parents: number
+  }[]
+}
 
-export default function BarCharts() {
+export default function BarCharts({ data }: BarChartsProps) {
   return (
-    <div className="w-full rounded-lg border bg-white p-6.25 shadow-sm mt-7.5">
+    <div className="w-full cardIcon section-padding card-padding">
 
-      <h2 className="text-[20px] font-semibold mb-4">
+      <h2 className="text-[20px] font-semibold mb-6.25">
         User Growth by Type
       </h2>
 
-      <ResponsiveContainer width="100%" height={350}>
-        <BarChart data={chartData}>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={data}>
 
           <CartesianGrid strokeDasharray="3 3" />
 

@@ -25,7 +25,7 @@ export function FilterSection({
   onSearch,
 }: FilterSectionProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 ">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-[20px] card-padding">
 
       {/* Search */}
       <div className="w-full md:w-4/2">

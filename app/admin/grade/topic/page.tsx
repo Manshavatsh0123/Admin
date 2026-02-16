@@ -1,10 +1,10 @@
 import AdminLayout from "@/components/global/AdminLayout";
-import SubjectPage from "./SubjectPage";
+import TopicPage from "./TopicPage";
 
 function page() {
     return (
         <AdminLayout>
-            <SubjectPage />
+            <TopicPage />
         </AdminLayout>
     );
 }

@@ -1,4 +1,3 @@
-
 interface StatsCardProps {
   icon?: React.ReactNode
   title: string
@@ -15,10 +14,10 @@ export function Cards({
   percentage,
 }: StatsCardProps) {
   return (
-    <div className="w-full rounded-xl border border-gray-200 bg-white p-6">
+    <div className="w-full rounded-2xl border border-gray-200 bg-white section-padding">
 
       {/* Icon */}
-      <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#E1F8F2] mb-4 text-black">
+      <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#E1F8F2] mb-3.75 text-black">
         {icon}
       </div>
 

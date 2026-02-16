@@ -2,72 +2,56 @@
 
 import * as React from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
-import { StatCard } from "../../../components/global/StatCard"
-import { FilterSection } from "./components/FilterOption"
-import { DataTable } from "./components/DataTable"
-import { StatusBadge } from "./components/StatusBadge"
-import type { ColumnDef } from "./components/DataTable"
-import CreateSubjectForm from "./components/CreateSubjectForm"
-import { Pencil, Trash2 } from "lucide-react"
+import { FilterSection } from "../subject/components/FilterOption"
+import { DataTable } from "../subject/components/DataTable"
+import { StatusBadge } from "../subject/components/StatusBadge"
+import type { ColumnDef } from "../subject/components/DataTable"
+import { Eye, Pencil, Trash2 } from "lucide-react"
+import { StatCard } from "@/components/global/StatCard"
+import CreateTopic from "./components/CreateTopic"
 
 const mockData = [
     {
         id: 1,
-        grade: "Grade 4",
-        subjectName: "Math Basics",
-        level: "GCSE",
+        topicName: "Introduction to Algebra",
+        chapter: "Algebra",
+        tutors: 12,
+        students: 285,
         status: "active",
     },
     {
         id: 2,
-        grade: "Grade 5",
-        subjectName: "English Literature",
-        level: "Secondary",
+        topicName: "Trigonometry Basics",
+        chapter: "Trigonometry",
+        tutors: 8,
+        students: 245,
         status: "active",
-    },
-    {
-        id: 3,
-        grade: "Grade 7",
-        subjectName: "Science Methods",
-        level: "Primary",
-        status: "active",
-    },
-    {
-        id: 4,
-        grade: "Grade 6",
-        subjectName: "Reasoning Concepts",
-        level: "Primary",
-        status: "active",
-    },
-    {
-        id: 5,
-        grade: "Grade 5",
-        subjectName: "Reasoning Foundation",
-        level: "Secondary",
-        status: "draft",
     },
 ]
 
-const SubjectPage = () => {
-
+const TopicPage = () => {
     const [isModalOpen, setIsModalOpen] = React.useState(false)
-
 
     const columns: ColumnDef[] = [
         {
-            id: "grade",
-            header: "Grades",
-            accessorKey: "grade",
+            id: "topicName",
+            header: "Topic Name",
+            accessorKey: "topicName",
         },
         {
-            id: "subjectName",
-            header: "Subject Name",
-            accessorKey: "subjectName",
+            id: "chapter",
+            header: "Chapter",
+            accessorKey: "chapter",
         },
         {
-            id: "level",
-            header: "Level",
-            accessorKey: "level",
+            id: "tutors",
+            header: "Tutors",
+            accessorKey: "tutors",
+        },
+        {
+            id: "students",
+            header: "Students",
+            accessorKey: "students",
         },
         {
             id: "status",
@@ -87,14 +71,19 @@ const SubjectPage = () => {
             cell: (_: any, row?: any) => (
                 <div className="flex items-center gap-4">
                     <Pencil
-                        className="w-4 h-4 text-black cursor-pointer hover:text-gray-600"
+                        size={16}
+                        strokeWidth={1.5}
+                        className="cursor-pointer hover:text-gray-600"
                         onClick={(e) => {
                             e.stopPropagation()
                             console.log("Edit", row)
                         }}
                     />
+
                     <Trash2
-                        className="w-4 h-4 text-gray-600 cursor-pointer hover:text-red-600"
+                        size={16}
+                        strokeWidth={1.5}
+                        className="cursor-pointer hover:text-red-600"
                         onClick={(e) => {
                             e.stopPropagation()
                             console.log("Delete", row)
@@ -102,23 +91,22 @@ const SubjectPage = () => {
                     />
                 </div>
             ),
-        }
-
+        },
     ]
 
     return (
-        <div className="space-y-6">
+        <>
             <PageInfoBar
-                title="Subject Management"
-                description="Create and manage subjects"
-                actionButtonLabel="Create Subject"
+                title="Topic  Management"
+                description="Create and manage chapter’s topics and video tutorial links"
+                actionButtonLabel="Create Topic"
                 onActionClick={() => setIsModalOpen(true)}
             />
 
-            <CreateSubjectForm />
+            <CreateTopic />
 
-            <div className="grid grid-cols-3 gap-4">
-                <StatCard label="Total Courses" value={18} />
+            <div className="grid grid-cols-3 gap-7.5 card-padding">
+                <StatCard label="Total Courses" value={5} />
                 <StatCard label="Active Courses" value="7" />
                 <StatCard label="Total Students" value="555" />
             </div>
@@ -139,9 +127,8 @@ const SubjectPage = () => {
             />
 
             <DataTable columns={columns} data={mockData} />
-        </div>
+        </>
     )
 }
 
-export default SubjectPage
-
+export default TopicPage

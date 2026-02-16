@@ -37,14 +37,12 @@ export function DataTable({
   onSelectRows,
 }: DataTableProps) {
 
-  const [selectedRows, setSelectedRows] = React.useState<Set<number>>(
-    new Set()
-  )
+  const [selectedRows, setSelectedRows] = React.useState<Set<number>>(new Set())
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      const allIndexes = new Set(data.map((_, idx) => idx))
-      setSelectedRows(allIndexes)
+      const all = new Set(data.map((_, i) => i))
+      setSelectedRows(all)
       onSelectRows?.(data)
     } else {
       setSelectedRows(new Set())
@@ -53,27 +51,26 @@ export function DataTable({
   }
 
   const handleSelectRow = (idx: number, checked: boolean) => {
-    const newSelected = new Set(selectedRows)
+    const updated = new Set(selectedRows)
 
-    if (checked) newSelected.add(idx)
-    else newSelected.delete(idx)
+    if (checked) updated.add(idx)
+    else updated.delete(idx)
 
-    setSelectedRows(newSelected)
-    onSelectRows?.(data.filter((_, i) => newSelected.has(i)))
+    setSelectedRows(updated)
+    onSelectRows?.(data.filter((_, i) => updated.has(i)))
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 overflow-hidden bg-white">
-      
-      {/* IMPORTANT: table-fixed + w-full */}
-      <Table className="w-full table-fixed">
+    <div className="bg-white border border-[#E5E7EB] rounded-[16px] overflow-hidden card-padding">
+
+      <Table className="w-full">
 
         {/* HEADER */}
         <TableHeader>
-          <TableRow className="bg-[#F9F9F9] border-b border-gray-200">
+          <TableRow className="bg-[#F9FAFB] border-b border-[#E5E7EB]">
 
             {selectable && (
-              <TableHead className="w-12 text-center">
+              <TableHead className="w-12 px-4">
                 <Checkbox
                   checked={
                     data.length > 0 &&
@@ -90,27 +87,38 @@ export function DataTable({
               <TableHead
                 key={column.id}
                 className={`
-                  text-[14px] font-semibold text-black h-12
-                  ${column.width ? column.width : "w-auto"}
+                  px-6 py-4
+                  text-[14px]
+                  font-semibold
+                  text-[#111827]
+                  ${column.width ?? ""}
                 `}
               >
                 {column.header}
               </TableHead>
             ))}
+
           </TableRow>
         </TableHeader>
 
         {/* BODY */}
         <TableBody>
+
           {data.map((row, idx) => (
+
             <TableRow
               key={idx}
               onClick={() => onRowClick?.(row)}
-              className="border-b border-gray-100 hover:bg-gray-50 transition"
+              className="
+                border-b border-[#F1F5F9]
+                hover:bg-[#F9FAFB]
+                transition-colors
+                cursor-pointer
+              "
             >
 
               {selectable && (
-                <TableCell className="text-center">
+                <TableCell className="px-4 py-5">
                   <Checkbox
                     checked={selectedRows.has(idx)}
                     onCheckedChange={(checked) =>
@@ -122,21 +130,32 @@ export function DataTable({
               )}
 
               {columns.map((column) => (
+
                 <TableCell
                   key={column.id}
-                  className="py-4 text-sm text-gray-800 align-middle"
+                  className="
+                    px-6 py-5
+                    text-[14px]
+                    text-[#111827]
+                    font-normal
+                    align-middle
+                  "
                 >
                   {column.cell
                     ? column.cell(row[column.accessorKey], row)
                     : row[column.accessorKey]}
                 </TableCell>
+
               ))}
 
             </TableRow>
+
           ))}
+
         </TableBody>
 
       </Table>
+
     </div>
   )
 }

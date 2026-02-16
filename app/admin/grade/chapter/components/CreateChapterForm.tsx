@@ -10,7 +10,7 @@ import AppButton from "@/components/global/Button"
 
 export default function CreateChapterForm() {
   return (
-    <div className="bg-[#F6F6F6] rounded-2xl p-8 w-full">
+    <div className="bg-[#F6F6F6] rounded-3xl section-padding w-full card-padding">
 
       {/* Title */}
       <h2 className="text-[20px] font-semibold mb-8">

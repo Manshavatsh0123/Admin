@@ -128,24 +128,13 @@
 
 @layer components {
 
-  /* Main headings */
+  /* PageInfoBar headings */
   .heading-main {
-    @apply text-[48px] leading-[48px] font-bold text-black;
+    @apply text-[36px] font-bold leading-10 text-black;
   }
 
-  /* Section headings */
-  .heading-section {
-    @apply text-[27px] md:text-[32px] lg:text-[36px] leading-none lg:leading-12 font-semibold text-black text-center mb-3 lg:mb-6;
-  }
-
-  /* Paragraph text */
-  .text-paragraph {
-    @apply text-[14px] lg:text-[16px] leading-6.5 font-normal text-black;
-  }
-
-  /* Optional smaller text */
-  .text-small {
-    @apply text-[14px] leading-5.5 text-gray-600;
+  .heading-paragraph {
+    @apply text-[16px] text-black;
   }
 
   /* Common container */
@@ -153,17 +142,21 @@
     @apply max-w-7xl mx-auto;
   }
 
-  /* Section padding */
+  /*card Section padding */
   .section-padding {
-    @apply py-[30px] px-[30px];
+    @apply p-6.25;
+  }
+
+  .cardIcon {
+    @apply border rounded-3xl bg-white;
   }
 
   .card-padding {
     @apply mt-[30px];
   }
 
-  .mobile-padding {
-    @apply px-6 md:px-8 lg:px-0;
+  .quickStatsheading{
+    @apply text-[20px] font-semibold mb-5 ;
   }
 
   /* Primary button text */

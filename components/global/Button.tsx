@@ -17,7 +17,7 @@ const AppButton = ({
     variant = "primary",
 }: AppButtonProps) => {
     const baseStyle =
-        "flex items-center justify-center gap-2 px-4 h-10 text-sm font-medium rounded-md transition";
+        "flex items-center justify-center gap-1 px-[20px] py-[20px]  text-[16px] font-medium rounded-[10px] transition";
 
     const variants = {
         primary:
@@ -32,7 +32,9 @@ const AppButton = ({
             className={`${baseStyle} ${variants[variant]} ${className}`}
         >
             {showIcon && variant === "primary" && (
-                <Plus className="w-4 h-4" />
+                <Plus size={20}
+                    strokeWidth={1.5}
+                    className="shrink-0" />
             )}
             {ctaText}
         </ShadButton>
