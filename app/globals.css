@@ -130,11 +130,11 @@
 
   /* PageInfoBar headings */
   .heading-main {
-    @apply text-[36px] font-bold leading-10 text-black;
+    @apply text-[36px] font-bold leading-10;
   }
 
   .heading-paragraph {
-    @apply text-[16px] text-black;
+    @apply text-[16px];
   }
 
   /* Common container */

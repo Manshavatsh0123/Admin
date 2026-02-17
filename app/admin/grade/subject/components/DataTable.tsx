@@ -61,7 +61,7 @@ export function DataTable({
   }
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-[16px] overflow-hidden card-padding">
+    <div className="bg-white border border-[#E5E7EB] rounded-3xl overflow-hidden card-padding">
 
       <Table className="w-full">
 

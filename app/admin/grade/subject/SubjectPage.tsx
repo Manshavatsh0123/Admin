@@ -52,7 +52,6 @@ const SubjectPage = () => {
 
     const [isModalOpen, setIsModalOpen] = React.useState(false)
 
-
     const columns: ColumnDef[] = [
         {
             id: "grade",
@@ -107,7 +106,7 @@ const SubjectPage = () => {
     ]
 
     return (
-        <div className="space-y-6">
+        <>
             <PageInfoBar
                 title="Subject Management"
                 description="Create and manage subjects"
@@ -117,7 +116,7 @@ const SubjectPage = () => {
 
             <CreateSubjectForm />
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4 card-padding">
                 <StatCard label="Total Courses" value={18} />
                 <StatCard label="Active Courses" value="7" />
                 <StatCard label="Total Students" value="555" />
@@ -139,7 +138,7 @@ const SubjectPage = () => {
             />
 
             <DataTable columns={columns} data={mockData} />
-        </div>
+        </>
     )
 }
 

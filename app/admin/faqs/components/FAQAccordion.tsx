@@ -29,7 +29,7 @@ export default function FAQAccordion({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
 
       {data.map((faq) => {
 
@@ -37,65 +37,45 @@ export default function FAQAccordion({
 
         return (
           <div
-            key={faq.id}
-            className="rounded-lg bg-white p-4 shadow-sm"
-          >
+            key={faq.id} className="rounded-[10px] bg-white px-4 border">
 
-            {/* HEADER */}
             <button
               onClick={() => toggle(faq.id)}
-              className="w-full flex items-center justify-between px-5 py-4
-                text-left
-              ">
-
+              className="w-full flex items-center justify-between px-5 py-4 text-left ">
               <div>
 
-                {/* Question */}
+
                 <p className="text-[16px] font-semibold text-black">
                   {faq.question}
                 </p>
 
-                {/* Category Badge */}
-                <span className="inline-block mt-2  px-3 py-1 text-[12px] font-medium rounded-full bg-[#FEE2E2] text-[#CE371F]">
+                <span className="inline-block mt-2 px-3 py-1 text-[#CE371F] text-[12px] font-medium rounded-full bg-[#D33122]/10">
                   {faq.category}
                 </span>
 
               </div>
 
-              <ChevronDown
-                size={20}
-                strokeWidth={1.5}
-                className={`
-                  transition-transform
-                  ${isOpen ? "rotate-180" : ""}
-                `}
-              />
+              <ChevronDown size={20} strokeWidth={1.5} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
 
             </button>
 
 
             {/* BODY */}
             {isOpen && (
-              <div className="px-5 pb-5">
+              <div className="px-5 pb-4">
 
-                <p className="text-[14px] text-[#4B5563] mb-4">
+                <p className="text-[16px] text-[#1E292B] mb-4">
                   {faq.answer}
                 </p>
 
                 {/* Actions */}
-                <div className="flex gap-4 justify-end">
+                <div className="flex items-center justify-end gap-4">
 
-                  <button
-                    onClick={() => onEdit?.(faq)}
-                    className="text-black hover:text-gray-600"
-                  >
+                  <button onClick={() => onEdit?.(faq)} className="text-black hover:text-gray-600" >
                     <Pencil size={16} strokeWidth={1.5} />
                   </button>
 
-                  <button
-                    onClick={() => onDelete?.(faq.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
+                  <button onClick={() => onDelete?.(faq.id)} className="text-[#CE371F] hover:text-red-700">
                     <Trash2 size={16} strokeWidth={1.5} />
                   </button>
 

@@ -12,7 +12,7 @@ import FileUpload from "@/components/forms/Select"
 
 export default function CreateSubjectForm() {
   return (
-    <div className="bg-[#F6F6F6] rounded-2xl p-8 w-full">
+    <div className="bg-[#F6F6F6] rounded-2xl p-8 w-full card-padding">
 
       {/* Title */}
       <h2 className="text-[20px] font-semibold mb-8">

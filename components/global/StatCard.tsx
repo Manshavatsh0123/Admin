@@ -14,7 +14,7 @@ export function StatCard({
   icon,
 }: StatCardProps) {
   return (
-    <div className="border border-[#D9D9D9] rounded-[10px] p-[24px]">
+    <div className="border border-[#D9D9D9] rounded-[10px] p-6">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-[16px] font-medium text-gray-600">{label}</p>
