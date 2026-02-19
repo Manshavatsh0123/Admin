@@ -43,7 +43,6 @@ const mainItems = [
   { label: "FAQs", icon: HelpCircle, href: "/admin/faqs" },
   { label: "Student Profile", icon: User, href: "/admin/student-profile" },
   { label: "MCQ Upload", icon: Upload, href: "/admin/mcq-upload" },
-  { label: "Assessments", icon: ClipboardList, href: "/admin/assessments" },
   { label: "Notifications", icon: Bell, href: "/admin/notifications" },
   { label: "Support", icon: Headphones, href: "/admin/support" },
 ]
