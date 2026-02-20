@@ -1,6 +1,13 @@
 "use client"
+
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Search } from "lucide-react"
 
 interface FilterOption {
@@ -25,13 +32,20 @@ export function FilterSection({
   filters = [],
   onSearch,
 }: FilterSectionProps) {
+
+  // Dynamic width based on filters count
+  const getSearchWidth = () => {
+    if (filters.length === 0) return "w-full"
+    if (filters.length === 1) return "w-full md:w-[92%]"
+    return "w-full md:w-[71%]"
+  }
+
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-[20px] card-padding">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 card-padding">
 
       {/* Search */}
-      <div className="w-full md:w-4/2">
+      <div className={getSearchWidth()}>
         <div className="relative">
-
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
 
           <Input
@@ -39,7 +53,6 @@ export function FilterSection({
             className="w-full pl-10"
             onChange={(e) => onSearch?.(e.target.value)}
           />
-
         </div>
       </div>
 
@@ -49,7 +62,7 @@ export function FilterSection({
           {filters.map((filter, idx) => (
             <Select
               key={idx}
-              value={filter.value || ""}
+              value={filter.value ?? ""}
               onValueChange={filter.onChange}
             >
               <SelectTrigger className="w-40">
@@ -63,12 +76,10 @@ export function FilterSection({
                   </SelectItem>
                 ))}
               </SelectContent>
-
             </Select>
           ))}
         </div>
       )}
     </div>
-
   )
 }

@@ -24,18 +24,7 @@ const NotificationPage = () => {
             </div>
 
             <FilterSection
-                searchPlaceholder="Search users..."
-                filters={[
-                    {
-                        label: "Status",
-                        options: [
-                            { label: "Active", value: "active" },
-                            { label: "Inactive", value: "inactive" },
-                        ],
-                        value: "active",
-                        onChange: (value) => console.log(value),
-                    },
-                ]}
+                searchPlaceholder="Search notification..."
                 onSearch={(value) => console.log(value)}
                 onReset={() => console.log("Reset")}
             />
