@@ -117,8 +117,8 @@ export const AuditPage = () => {
             cell: (value) => (
                 <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${value === "success"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-600"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-600"
                         }`}
                 >
                     {value === "success" ? "Success" : "Failed"}
@@ -164,9 +164,7 @@ export const AuditPage = () => {
                 onSearch={setSearch}
             />
 
-            <div className="mt-6">
-                <DataTable columns={columns} data={filteredData} />
-            </div>
+            <DataTable columns={columns} data={filteredData} />
         </>
     )
 }

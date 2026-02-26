@@ -1,37 +1,100 @@
-import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCircleUser } from "@fortawesome/free-regular-svg-icons"
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
+"use client"
+import Image from "next/image"
+import { Cross, Menu, PanelLeftClose, PanelLeftOpen, Settings, User, X, XIcon } from "lucide-react"
 
-export default function Navbar() {
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+
+interface Props {
+  collapsed: boolean
+  setCollapsed: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export default function Navbar({ collapsed, setCollapsed }: Props) {
     return (
-        <nav className="bg-white border-b border-gray-200">
-            <div className="px-6 h-16 flex items-center justify-between">
+        <nav className="h-16 border-b bg-white px-6 flex items-center justify-between">
 
-                {/* Logo */}
-                <div className="flex items-center gap-10 py-4 px-2">
-                    <FontAwesomeIcon
-                        icon={faXmark}
-                        className="w-5 h-5 md:w-5 md:h-5 lg:w-5 lg:h-5 cursor-pointer"
-                    />
+            {/* LEFT SECTION */}
+            <div className="flex items-center gap-4">
 
-                    <Image
-                        src="/images/AdminLogo.png"
-                        alt="Persistent Learning"
-                        width={140}
-                        height={50}
-                        priority
-                    />
-                </div>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setCollapsed(!collapsed)}
+                >
+                    {collapsed ? (
+                        <Menu className="h-5 w-5" />
+                    ) : (
+                        <XIcon className="h-5 w-5" />
+                    )}
+                </Button>
 
-                {/* Right section */}
-                <div className="flex items-center gap-2 text-black">
-                    <span>Welcome Admin!</span>
-                    <FontAwesomeIcon
-                        icon={faCircleUser}
-                        className="w-5 h-5 md:w-5 md:h-5 lg:w-6 lg:h-6"
-                    />
-                </div>
+                <Image src="/images/AdminLogo.png" alt="Persistent Learning" width={140} height={40} priority />
+
+            </div>
+
+            {/* RIGHT SECTION */}
+            <div className="flex items-center gap-2">
+
+                <span className="text-[16px]  text-black">
+                    Welcome Admin!
+                </span>
+
+                {/* Profile Dropdown */}
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-9 w-9 rounded-full p-0">
+                            <Avatar className="h-9 w-9">
+                                <AvatarFallback>
+                                    <User className="h-5 w-5" />
+                                </AvatarFallback>
+                            </Avatar>
+                        </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="end" className="w-48">
+
+                        <div className="flex items-center gap-3 px-2 py-2">
+                            <Avatar className="h-10 w-10">
+                                <AvatarFallback className="bg-[#CE371F] text-white font-semibold">
+                                    A
+                                </AvatarFallback>
+                            </Avatar>
+
+                            <div className="flex flex-col leading-tight">
+                                <p className="text-[14px] font-medium">Alex Singh</p>
+                                <span className="text-[12px] text-muted-foreground">Student</span>
+                            </div>
+                        </div>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem className="flex items-center gap-2 text-black text-[14px]">
+                            <User className="h-4 w-4" />
+                            <span>View Profile</span>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem className="flex items-center gap-2 text-black text-[14px]">
+                            <Settings className="h-4 w-4" />
+                            <span>Settings</span>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem className="text-[#CE371F] flex items-center gap-2 text-[14px]">
+                            <Settings className="h-4 w-4" />
+                            <span>Logout</span>
+                        </DropdownMenuItem>
+
+                    </DropdownMenuContent>
+                </DropdownMenu>
 
             </div>
         </nav>

@@ -1,6 +1,8 @@
+"use client"
+import { useState } from "react";
 import Footer from "../layout/Footer";
 import Navbar from "../layout/Navbar";
-import Sidebar from "../layout/Sidebar";
+import AdminSidebar from "../layout/Sidebar";
 
 
 export default function AdminLayout({
@@ -8,22 +10,19 @@ export default function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const [collapsed, setCollapsed] = useState(true)
     return (
         <>
-            <Navbar />
+            <Navbar collapsed={collapsed} setCollapsed={setCollapsed} />
 
             {/* Main Layout */}
             <div className="flex min-h-screen">
-
-                <aside className="w-57.5 border-r border-[#E5E7EB]">
-                    <Sidebar />
-                </aside>
+                <AdminSidebar collapsed={collapsed} />
 
                 {/* Content */}
                 <main className="flex-1 section-padding">
                     {children}
                 </main>
-
             </div>
 
             <Footer />
