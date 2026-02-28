@@ -49,10 +49,17 @@ export default function AdminSidebar({ collapsed }: Props) {
     { label: "Notifications", icon: Bell, href: "/admin/notifications" },
     { label: "Support", icon: Headphones, href: "/admin/support" },
     { label: "Tutors", icon: Users, href: "/admin/tutors" },
-    { label: "Users", icon: User, href: "/admin/users" },
+    {
+      label: "Users", icon: User,
+      children: [
+        { label: "Student", href: "/admin/users/student" },
+        { label: "Parent", href: "/admin/users/parent" },
+        { label: "Tutor", href: "/admin/users/tutor" },
+      ],
+    },
     { label: "Audit Logs", icon: ShieldCheck, href: "/admin/audit-logs" },
     { label: "Coupons", icon: Ticket, href: "/admin/coupons" },
-    { label: "Payment", icon: CreditCard, href: "/admin/payment" },
+    { label: "Payment History", icon: CreditCard, href: "/admin/payment-history" },
   ]
 
   const isActive = (href?: string) => {

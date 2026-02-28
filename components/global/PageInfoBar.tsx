@@ -5,6 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import AppButton from "./Button";
+import Link from "next/link";
 
 interface PageInfoBarProps {
   title?: string;
@@ -29,16 +30,12 @@ export default function PageInfoBar({
     <div className="flex flex-row justify-between items-start md:items-center">
 
       {/* Left side */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
 
         {showBack && (
-          <Button
-            onClick={() => router.back()}
-            variant="outline"
-            className="p-0 w-8 h-8 rounded-full"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
+          <Link href="/admin">
+            <ChevronLeft className="h-7.5 w-7.5 cursor-pointer" />
+          </Link>
         )}
 
         <div>

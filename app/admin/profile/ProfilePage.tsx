@@ -1,12 +1,10 @@
 "use client"
 
-import { ArrowLeft, ChevronLeft, Mail, Phone } from "lucide-react"
-import Link from "next/link"
+import { Mail, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { CardContent } from "@/components/ui/card"
 import PageInfoBar from "@/components/global/PageInfoBar"
 import { StatCard } from "@/components/global/StatCard"
-
 
 export default function ProfilePage() {
     return (
@@ -14,17 +12,9 @@ export default function ProfilePage() {
 
             {/* Header */}
             <div className="flex items-center justify-between">
+                <PageInfoBar showBack={true} title="Admin Profile" description="System Administrator" />
 
-                <div className="flex items-center gap-3">
-                    <Link href="/admin">
-                        <ChevronLeft className="h-7 w-7 cursor-pointer" />
-                    </Link>
-
-                    <PageInfoBar title="Admin Profile"
-                        description="System Administrator " />
-                </div>
-
-                <Button className="bg-red-500 hover:bg-red-600">
+                <Button className="bg-[#CE3820] hover:bg-[#CE3820]/90 text-white">
                     Edit Profile
                 </Button>
             </div>
@@ -62,7 +52,7 @@ export default function ProfilePage() {
                                 <p className="text-[16px] font-semibold mb-1">
                                     Role
                                 </p>
-                                <p className="text-[15px] text-muted-foreground">
+                                <p className="text-[16px] text-muted-foreground">
                                     System Administrator
                                 </p>
                             </div>
@@ -71,7 +61,7 @@ export default function ProfilePage() {
                                 <p className="text-[16px]font-semibold mb-1">
                                     Department
                                 </p>
-                                <p className="text-[15px] text-muted-foreground">
+                                <p className="text-[16px] text-muted-foreground">
                                     Platform Management
                                 </p>
                             </div>
@@ -81,31 +71,31 @@ export default function ProfilePage() {
                         {/* RIGHT */}
                         <div>
 
-                            <p className="text-sm font-semibold mb-4">
+                            <p className="text-[16px] font-semibold mb-4">
                                 Contact Information
                             </p>
 
                             <div className="space-y-5">
 
                                 <div className="flex items-start gap-3">
-                                    <Mail className="h-4 w-4 mt-1 text-muted-foreground" />
+                                    <Mail className="h-5 w-5 mt-1 text-muted-foreground" />
                                     <div>
-                                        <p className="text-xs text-muted-foreground">
+                                        <p className="text-[16px] text-muted-foreground">
                                             Email
                                         </p>
-                                        <p className="text-sm font-medium">
+                                        <p className="text-[16px] font-medium">
                                             xyz@gmail.com
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-start gap-3">
-                                    <Phone className="h-4 w-4 mt-1 text-muted-foreground" />
+                                    <Phone className="h-5 w-5 mt-1 text-muted-foreground" />
                                     <div>
-                                        <p className="text-xs text-muted-foreground">
+                                        <p className="text-[16px] text-muted-foreground">
                                             Phone
                                         </p>
-                                        <p className="text-sm font-medium">
+                                        <p className="text-[16px] font-medium">
                                             +91 1298493284
                                         </p>
                                     </div>

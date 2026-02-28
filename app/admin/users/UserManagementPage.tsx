@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Pencil, Trash2 } from "lucide-react"
 import { FilterSection } from "../grade/subject/components/FilterOption"
-import UserManagementForm from "./components/UserManagementForm"
+
 
 const mockUsers = [
   {
@@ -127,7 +127,7 @@ export const UserManagementPage = () => {
         actionButtonLabel="Add Parent"
       />
 
-     <UserManagementForm />
+     
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 card-padding">
         <StatCard label="Total Users" value={5} />

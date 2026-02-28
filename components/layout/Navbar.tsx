@@ -11,10 +11,11 @@ import {
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import Link from "next/link"
 
 interface Props {
-  collapsed: boolean
-  setCollapsed: React.Dispatch<React.SetStateAction<boolean>>
+    collapsed: boolean
+    setCollapsed: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function Navbar({ collapsed, setCollapsed }: Props) {
@@ -76,14 +77,20 @@ export default function Navbar({ collapsed, setCollapsed }: Props) {
 
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuItem className="flex items-center gap-2 text-black text-[14px]">
-                            <User className="h-4 w-4" />
-                            <span>View Profile</span>
+                        <DropdownMenuItem asChild>
+                            <Link href="/admin/profile"
+                                className="flex items-center gap-2 text-black text-[14px]"
+                            >
+                                <User className="h-4 w-4" />
+                                <span>View Profile</span>
+                            </Link>
                         </DropdownMenuItem>
 
                         <DropdownMenuItem className="flex items-center gap-2 text-black text-[14px]">
-                            <Settings className="h-4 w-4" />
-                            <span>Settings</span>
+                            <Link href="/admin/settings" className="flex items-center gap-2 text-black text-[14px]">
+                                <Settings className="h-4 w-4" />
+                                <span>Settings</span>
+                            </Link>
                         </DropdownMenuItem>
 
                         <DropdownMenuSeparator />
