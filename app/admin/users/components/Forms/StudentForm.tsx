@@ -1,91 +1,126 @@
 "use client"
-import * as React from "react"
-import AppButton from "@/components/global/Button"
-import { FormField } from "@/app/admin/grade/subject/components/FormField"
 
-const StudentForm = () => {
-  const [form, setForm] = React.useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    about: "",
-    grade: "",
-    status: "active",
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { studentSchema, StudentFormValues } from "@/components/schemas/student.schema"
+import { RHFField } from "@/components/forms/RHFField"
+import AppButton from "@/components/global/Button"
+
+export default function StudentForm() {
+
+  const form = useForm<StudentFormValues>({
+    resolver: zodResolver(studentSchema),
+    defaultValues: {
+      userType: "Student",
+      status: "Active",
+      grade: "Grade 5",
+    },
   })
 
-  const handleChange = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
+  const onSubmit = (data: StudentFormValues) => {
+    console.log("Student Data:", data)
   }
 
   return (
-    <div className="bg-[#F6F6F6] rounded-2xl p-6 w-full mt-6">
+    <div className="bg-[#F6F6F6] rounded-2xl p-6 w-full space-y-6 card-padding">
 
-      <h2 className="text-[18px] font-semibold mb-6">
+      <h2 className="text-lg font-semibold">
         Create New User
       </h2>
 
-      <div className="grid grid-cols-3 gap-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid grid-cols-3 gap-6"
+      >
 
-        <FormField
+        {/* User Type */}
+        <RHFField
+          name="userType"
+          label="User Type"
+          type="select"
+          control={form.control}
+          options={[
+            { label: "Student", value: "Student" },
+          ]}
+        />
+
+        {/* Full Name */}
+        <RHFField
+          name="fullName"
           label="Full Name"
           placeholder="e.g., Alex Singh"
-          value={form.fullName}
-          onChange={(value) => handleChange("fullName", value)}
+          control={form.control}
         />
 
-        <FormField
+        {/* Email */}
+        <RHFField
+          name="email"
           label="User Email"
+          type="email"
           placeholder="e.g., xyz@gmail.com"
-          value={form.email}
-          onChange={(value) => handleChange("email", value)}
+          control={form.control}
         />
 
-        <FormField
+        {/* Phone */}
+        <RHFField
+          name="phone"
           label="Phone Number"
           placeholder="e.g., 1234567890"
-          value={form.phone}
-          onChange={(value) => handleChange("phone", value)}
+          control={form.control}
         />
 
-        <FormField
+        {/* About */}
+        <RHFField
+          name="about"
           label="About Me"
-          placeholder="Enter something..."
           type="textarea"
-          value={form.about}
-          onChange={(value) => handleChange("about", value)}
+          placeholder="Enter something..."
+          control={form.control}
         />
 
-        <FormField
+        {/* Grade */}
+        <RHFField
+          name="grade"
           label="Grade"
-          placeholder="Grade 5"
-          value={form.grade}
-          onChange={(value) => handleChange("grade", value)}
+          type="select"
+          control={form.control}
+          options={[
+            { label: "Grade 1", value: "Grade 1" },
+            { label: "Grade 2", value: "Grade 2" },
+            { label: "Grade 3", value: "Grade 3" },
+            { label: "Grade 4", value: "Grade 4" },
+            { label: "Grade 5", value: "Grade 5" },
+            { label: "Grade 6", value: "Grade 6" },
+          ]}
         />
 
-        <FormField
+        {/* Status */}
+        <RHFField
+          name="status"
           label="Status"
-          placeholder="Active"
-          value={form.status}
-          onChange={(value) => handleChange("status", value)}
+          type="select"
+          control={form.control}
+          options={[
+            { label: "Active", value: "Active" },
+            { label: "Inactive", value: "Inactive" },
+          ]}
         />
 
-      </div>
+        {/* Buttons */}
+        <div className="col-span-3 flex gap-3 mt-4">
+          <AppButton
+            ctaText="Add User"
+            showIcon={false}
+            className="bg-[#D33122] text-white px-5 py-2 rounded-lg"
+          />
+          <AppButton
+            ctaText="Cancel"
+            variant="outline"
+            showIcon={false}
+          />
+        </div>
 
-      <div className="flex gap-3 mt-6">
-        <AppButton
-          ctaText="Add User"
-          showIcon={false}
-          className="bg-[#D33122] text-white px-5 py-2 rounded-lg"
-        />
-        <AppButton
-          ctaText="Cancel"
-          variant="outline"
-          showIcon={false}
-        />
-      </div>
-
+      </form>
     </div>
   )
 }
-
-export default StudentForm

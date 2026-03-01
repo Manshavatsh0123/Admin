@@ -1,120 +1,187 @@
 "use client"
-import * as React from "react"
+
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { tutorSchema, TutorFormValues } from "@/components/schemas/tutor.schema" 
+import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
-import { FormField } from "@/app/admin/grade/subject/components/FormField"
 
-const TutorForm = () => {
+interface CreateTutorFormProps {
+  onCancel?: () => void
+}
 
-  const [form, setForm] = React.useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    experience: "",
-    specialization: "",
-    qualifications: "",
-    about: "",
+export default function CreateTutorForm({ onCancel }: CreateTutorFormProps) {
+
+  const form = useForm<TutorFormValues>({
+    resolver: zodResolver(tutorSchema),
+    defaultValues: {
+      status: "Active",
+    },
   })
 
-  const handleChange = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
+  const onSubmit = (data: TutorFormValues) => {
+    console.log("Tutor Data:", data)
   }
 
   return (
-    <div className="space-y-6 mt-6">
+    <div className="bg-[#F6F6F6] rounded-2xl p-6 w-full space-y-8">
 
-      {/* Personal Info */}
-      <div className="bg-[#F6F6F6] rounded-2xl p-6 space-y-6">
-        <h2 className="text-[18px] font-semibold">
-          Create New Tutor
-        </h2>
+      <h2 className="text-lg font-semibold">
+        Create New Tutor
+      </h2>
 
-        <div className="grid grid-cols-3 gap-6">
-          <FormField
-            label="First Name"
-            placeholder="Enter first name"
-            value={form.firstName}
-            onChange={(v) => handleChange("firstName", v)}
-          />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
-          <FormField
-            label="Last Name"
-            placeholder="Enter last name"
-            value={form.lastName}
-            onChange={(v) => handleChange("lastName", v)}
-          />
+        <div className="border rounded-xl p-6 space-y-6">
+          <h3 className="font-semibold">Personal Information</h3>
 
-          <FormField
-            label="Email Address"
-            placeholder="Enter email"
-            value={form.email}
-            onChange={(v) => handleChange("email", v)}
-          />
+          <div className="grid grid-cols-3 gap-6">
 
-          <FormField
-            label="Phone Number"
-            placeholder="Enter phone"
-            value={form.phone}
-            onChange={(v) => handleChange("phone", v)}
-          />
+            <RHFField
+              name="pronoun"
+              label="Pronoun"
+              type="select"
+              control={form.control}
+              options={[
+                { label: "Mr.", value: "Mr." },
+                { label: "Mrs.", value: "Mrs." },
+                { label: "Ms.", value: "Ms." },
+              ]}
+            />
 
-          <FormField
-            label="Experience (Years)"
-            placeholder="Enter years"
-            value={form.experience}
-            onChange={(v) => handleChange("experience", v)}
-          />
-        </div>
-      </div>
+            <RHFField
+              name="firstName"
+              label="First Name"
+              placeholder="Enter first name"
+              control={form.control}
+            />
 
-      {/* Professional Info */}
-      <div className="bg-[#F6F6F6] rounded-2xl p-6 space-y-6">
+            <RHFField
+              name="lastName"
+              label="Last Name"
+              placeholder="Enter last name"
+              control={form.control}
+            />
 
-        <h3 className="font-semibold">
-          Professional Information
-        </h3>
+            <RHFField
+              name="email"
+              label="Email"
+              type="email"
+              placeholder="Enter email"
+              control={form.control}
+            />
 
-        <div className="grid grid-cols-2 gap-6">
-          <FormField
-            label="Specialization"
-            placeholder="Mathematics"
-            value={form.specialization}
-            onChange={(v) => handleChange("specialization", v)}
-          />
+            <RHFField
+              name="phone"
+              label="Phone Number"
+              placeholder="Enter phone number"
+              control={form.control}
+            />
 
-          <FormField
-            label="Qualifications"
-            placeholder="Enter qualifications..."
-            value={form.qualifications}
-            onChange={(v) => handleChange("qualifications", v)}
-          />
+            <RHFField
+              name="joinDate"
+              label="Join Date"
+              type="date"
+              control={form.control}
+            />
 
-          <FormField
-            label="About"
-            placeholder="Write something..."
-            type="textarea"
-            value={form.about}
-            onChange={(v) => handleChange("about", v)}
-          />
+          </div>
         </div>
 
-        <div className="flex gap-3 mt-4">
+
+        <div className="border rounded-xl p-6 space-y-6">
+          <h3 className="font-semibold">Professional Information</h3>
+
+          <div className="grid grid-cols-3 gap-6">
+
+            <RHFField
+              name="specialization"
+              label="Specialization"
+              type="select"
+              control={form.control}
+              options={[
+                { label: "Mathematics", value: "Mathematics" },
+                { label: "English", value: "English" },
+                { label: "Science", value: "Science" },
+              ]}
+            />
+
+            <RHFField
+              name="grade"
+              label="Grade"
+              type="select"
+              control={form.control}
+              options={[
+                { label: "Grade 1", value: "Grade 1" },
+                { label: "Grade 2", value: "Grade 2" },
+                { label: "Grade 3", value: "Grade 3" },
+                { label: "Grade 4", value: "Grade 4" },
+                { label: "Grade 5", value: "Grade 5" },
+              ]}
+            />
+
+            <RHFField
+              name="experience"
+              label="Experience (Years)"
+              type="number"
+              placeholder="Enter years of experience"
+              control={form.control}
+            />
+
+            <RHFField
+              name="qualifications"
+              label="Qualifications"
+              placeholder="Enter qualification"
+              control={form.control}
+            />
+
+            <RHFField
+              name="status"
+              label="Status"
+              type="select"
+              control={form.control}
+              options={[
+                { label: "Active", value: "Active" },
+                { label: "Inactive", value: "Inactive" },
+              ]}
+            />
+
+            <div className="col-span-3">
+              <RHFField
+                name="about"
+                label="About"
+                type="textarea"
+                placeholder="Enter tutor description..."
+                control={form.control}
+              />
+            </div>
+
+          </div>
+        </div>
+
+      
+        <div className="flex gap-3">
+
+          {/* Submit */}
           <AppButton
+
             ctaText="Create Tutor"
             showIcon={false}
             className="bg-[#D33122] text-white px-5 py-2 rounded-lg"
           />
+
+          {/*  Cancel */}
           <AppButton
+
+            onClick={onCancel}
             ctaText="Cancel"
             variant="outline"
             showIcon={false}
           />
+
         </div>
 
-      </div>
-
+      </form>
     </div>
   )
 }
-
-export default TutorForm

@@ -6,9 +6,11 @@ type Role = "student" | "parent" | "tutor"
 
 interface UsersHeaderProps {
   role: Role
+  onAdd?: () => void   // ✅ ADD THIS
 }
 
-export default function UsersHeader({ role }: UsersHeaderProps) {
+export default function UsersHeader({ role, onAdd }: UsersHeaderProps) {
+
   const config = {
     student: {
       title: "User Management",
@@ -34,6 +36,7 @@ export default function UsersHeader({ role }: UsersHeaderProps) {
       title={current.title}
       description={current.description}
       actionButtonLabel={current.button}
+      onActionClick={onAdd}   // ✅ pass it here
     />
   )
 }

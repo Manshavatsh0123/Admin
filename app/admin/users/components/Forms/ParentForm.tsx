@@ -1,93 +1,147 @@
 "use client"
-import * as React from "react"
+
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { parentSchema, ParentFormValues } from "@/components/schemas/parent.schema"
+import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
-import { FormField } from "@/app/admin/grade/subject/components/FormField"
 
-const ParentForm = () => {
+export default function ParentForm() {
 
-  const [form, setForm] = React.useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    relationship: "",
-    children: "",
-    about: "",
-    status: "active",
+  const form = useForm<ParentFormValues>({
+    resolver: zodResolver(parentSchema),
+    defaultValues: {
+      userType: "Parent",
+      status: "Active",
+    },
   })
 
-  const handleChange = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
+  const onSubmit = (data: ParentFormValues) => {
+    console.log("Parent Data:", data)
   }
 
   return (
-    <div className="bg-[#F6F6F6] rounded-2xl p-6 w-full mt-6">
+    <div className="bg-[#F6F6F6] rounded-2xl p-6 w-full space-y-6 card-padding">
 
-      <h2 className="text-[18px] font-semibold mb-6">
-        Create New User
+      <h2 className="text-lg font-semibold">
+        Create New Parent
       </h2>
 
-      <div className="grid grid-cols-3 gap-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid grid-cols-3 gap-6"
+      >
 
-        <FormField
+        {/* User Type */}
+        <RHFField
+          name="userType"
+          label="User Type"
+          type="select"
+          control={form.control}
+          options={[
+            { label: "Parent", value: "Parent" },
+          ]}
+        />
+
+        {/* Pronoun */}
+        <RHFField
+          name="pronoun"
+          label="Pronoun"
+          type="select"
+          control={form.control}
+          options={[
+            { label: "Mr.", value: "Mr." },
+            { label: "Mrs.", value: "Mrs." },
+            { label: "Ms.", value: "Ms." },
+          ]}
+        />
+
+        {/* Full Name */}
+        <RHFField
+          name="fullName"
           label="Full Name"
-          placeholder="e.g., Rahul Singh"
-          value={form.fullName}
-          onChange={(value) => handleChange("fullName", value)}
+          placeholder="Enter full name"
+          control={form.control}
         />
 
-        <FormField
-          label="User Email"
-          placeholder="e.g., xyz@gmail.com"
-          value={form.email}
-          onChange={(value) => handleChange("email", value)}
-        />
-
-        <FormField
-          label="Phone Number"
-          placeholder="e.g., 1234567890"
-          value={form.phone}
-          onChange={(value) => handleChange("phone", value)}
-        />
-
-        <FormField
+        {/* Relationship */}
+        <RHFField
+          name="relationship"
           label="Relationship"
-          placeholder="Father"
-          value={form.relationship}
-          onChange={(value) => handleChange("relationship", value)}
+          type="select"
+          control={form.control}
+          options={[
+            { label: "Father", value: "Father" },
+            { label: "Mother", value: "Mother" },
+            { label: "Guardian", value: "Guardian" },
+          ]}
         />
 
-        <FormField
-          label="Enrolled Childs"
-          placeholder="2"
-          value={form.children}
-          onChange={(value) => handleChange("children", value)}
+        {/* Enrolled Child */}
+        <RHFField
+          name="enrolledChildren"
+          label="Enrolled Child"
+          type="select"
+          control={form.control}
+          options={[
+            { label: "Student 1", value: "student1" },
+            { label: "Student 2", value: "student2" },
+          ]}
         />
 
-        <FormField
-          label="About Me"
-          placeholder="Enter something..."
+        {/* Email */}
+        <RHFField
+          name="email"
+          label="Email"
+          type="email"
+          placeholder="Enter email"
+          control={form.control}
+        />
+
+        <RHFField
+          name="about"
+          label="About"
           type="textarea"
-          value={form.about}
-          onChange={(value) => handleChange("about", value)}
+          placeholder="Enter something..."
+          control={form.control}
         />
 
-      </div>
-
-      <div className="flex gap-3 mt-6">
-        <AppButton
-          ctaText="Add User"
-          showIcon={false}
-          className="bg-[#D33122] text-white px-5 py-2 rounded-lg"
+        {/* Phone */}
+        <RHFField
+          name="phone"
+          label="Phone Number"
+          placeholder="Enter phone number"
+          control={form.control}
         />
-        <AppButton
-          ctaText="Cancel"
-          variant="outline"
-          showIcon={false}
-        />
-      </div>
 
+        {/* Status */}
+        <RHFField
+          name="status"
+          label="Status"
+          type="select"
+          control={form.control}
+          options={[
+            { label: "Active", value: "Active" },
+            { label: "Inactive", value: "Inactive" },
+          ]}
+        />
+
+        {/* Buttons */}
+        <div className="col-span-3 flex gap-3 mt-4">
+          <AppButton
+            ctaText="Add User"
+            showIcon={false}
+            className="bg-[#D33122] text-white px-5 py-2 rounded-lg"
+          />
+          <AppButton
+            ctaText="Cancel"
+            variant="outline"
+            showIcon={false}
+          />
+        </div>
+
+      </form>
     </div>
   )
 }
 
-export default ParentForm

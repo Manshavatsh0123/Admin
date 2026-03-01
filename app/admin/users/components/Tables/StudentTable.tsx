@@ -14,6 +14,34 @@ const mockStudents = [
   {
     name: "Alex Singh",
     email: "alex.singh@example.com",
+    grade: 5,
+    phone: "1234567890",
+    status: "active",
+  },
+  {
+    name: "Alex Singh",
+    email: "alex.singh@example.com",
+    grade: 5,
+    phone: "1234567890",
+    status: "active",
+  },
+  {
+    name: "Alex Singh",
+    email: "alex.singh@example.com",
+    grade: 5,
+    phone: "1234567890",
+    status: "active",
+  },
+  {
+    name: "Alex Singh",
+    email: "alex.singh@example.com",
+    grade: 5,
+    phone: "1234567890",
+    status: "active",
+  },
+  {
+    name: "Alex Singh",
+    email: "alex.singh@example.com",
     grade: 7,
     phone: "1234567890",
     status: "inactive",
@@ -39,11 +67,10 @@ export default function StudentTable() {
       accessorKey: "status",
       cell: (value) => (
         <span
-          className={`px-3 py-1 rounded-full text-xs font-medium ${
-            value === "active"
+          className={`px-3 py-1 rounded-full text-xs font-medium ${value === "active"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-600"
-          }`}
+            }`}
         >
           {value === "active" ? "Active" : "Inactive"}
         </span>

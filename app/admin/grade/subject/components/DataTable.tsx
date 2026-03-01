@@ -1,161 +1,51 @@
 "use client"
 
-import * as React from "react"
+import React from "react"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
-import { Checkbox } from "@/components/ui/checkbox"
-
-export interface ColumnDef {
+export type ColumnDef<T> = {
   id: string
   header: string
-  accessorKey: string
-  cell?: (value: any, row?: any) => React.ReactNode
-  width?: string
+  accessorKey: keyof T
+  cell?: (value: T[keyof T], row: T) => React.ReactNode
 }
 
-interface DataTableProps {
-  columns: ColumnDef[]
-  data: any[]
-  onRowClick?: (row: any) => void
-  selectable?: boolean
-  onSelectRows?: (rows: any[]) => void
+interface DataTableProps<T> {
+  columns: ColumnDef<T>[]
+  data: T[]
 }
 
-export function DataTable({
-  columns,
-  data,
-  onRowClick,
-  selectable = false,
-  onSelectRows,
-}: DataTableProps) {
-
-  const [selectedRows, setSelectedRows] = React.useState<Set<number>>(new Set())
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      const all = new Set(data.map((_, i) => i))
-      setSelectedRows(all)
-      onSelectRows?.(data)
-    } else {
-      setSelectedRows(new Set())
-      onSelectRows?.([])
-    }
-  }
-
-  const handleSelectRow = (idx: number, checked: boolean) => {
-    const updated = new Set(selectedRows)
-
-    if (checked) updated.add(idx)
-    else updated.delete(idx)
-
-    setSelectedRows(updated)
-    onSelectRows?.(data.filter((_, i) => updated.has(i)))
-  }
-
+export function DataTable<T>({ columns, data }: DataTableProps<T>) {
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-3xl overflow-hidden card-padding">
-
-      <Table className="w-full">
-
-        {/* HEADER */}
-        <TableHeader>
-          <TableRow className="bg-[#F9FAFB] border-b border-[#E5E7EB]">
-
-            {selectable && (
-              <TableHead className="w-12 px-4">
-                <Checkbox
-                  checked={
-                    data.length > 0 &&
-                    selectedRows.size === data.length
-                  }
-                  onCheckedChange={(checked) =>
-                    handleSelectAll(checked === true)
-                  }
-                />
-              </TableHead>
-            )}
-
+    <div className="border rounded-xl overflow-hidden bg-white card-padding">
+      <table className="w-full text-sm">
+        <thead className="bg-gray-50 text-left">
+          <tr>
             {columns.map((column) => (
-              <TableHead
-                key={column.id}
-                className={`
-                  px-6 py-4
-                  text-[14px]
-                  font-semibold
-                  text-[#111827]
-                  ${column.width ?? ""}
-                `}
-              >
+              <th key={column.id} className="px-4 py-3 font-medium text-gray-700">
                 {column.header}
-              </TableHead>
+              </th>
             ))}
+          </tr>
+        </thead>
 
-          </TableRow>
-        </TableHeader>
+        <tbody>
+          {data.map((row, rowIndex) => (
+            <tr key={rowIndex} className="border-t">
+              {columns.map((column) => {
+                const value = row[column.accessorKey]
 
-        {/* BODY */}
-        <TableBody>
-
-          {data.map((row, idx) => (
-
-            <TableRow
-              key={idx}
-              onClick={() => onRowClick?.(row)}
-              className="
-                border-b border-[#F1F5F9]
-                hover:bg-[#F9FAFB]
-                transition-colors
-                cursor-pointer
-              "
-            >
-
-              {selectable && (
-                <TableCell className="px-4 py-5">
-                  <Checkbox
-                    checked={selectedRows.has(idx)}
-                    onCheckedChange={(checked) =>
-                      handleSelectRow(idx, checked === true)
-                    }
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </TableCell>
-              )}
-
-              {columns.map((column) => (
-
-                <TableCell
-                  key={column.id}
-                  className="
-                    px-6 py-5
-                    text-[14px]
-                    text-[#111827]
-                    font-normal
-                    align-middle
-                  "
-                >
-                  {column.cell
-                    ? column.cell(row[column.accessorKey], row)
-                    : row[column.accessorKey]}
-                </TableCell>
-
-              ))}
-
-            </TableRow>
-
+                return (
+                  <td key={column.id} className="px-4 py-4">
+                    {column.cell
+                      ? column.cell(value, row)
+                      : String(value)}
+                  </td>
+                )
+              })}
+            </tr>
           ))}
-
-        </TableBody>
-
-      </Table>
-
+        </tbody>
+      </table>
     </div>
   )
 }

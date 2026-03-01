@@ -24,7 +24,6 @@ interface FilterSectionProps {
     onChange?: (value: string) => void
   }[]
   onSearch?: (value: string) => void
-  onReset?: () => void
 }
 
 export function FilterSection({
@@ -32,19 +31,11 @@ export function FilterSection({
   filters = [],
   onSearch,
 }: FilterSectionProps) {
-
-  // Dynamic width based on filters count
-  const getSearchWidth = () => {
-    if (filters.length === 0) return "w-full"
-    if (filters.length === 1) return "w-full md:w-[92%]"
-    return "w-full md:w-[71%]"
-  }
-
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 card-padding">
+    <div className="flex flex-col md:flex-row md:items-center gap-4 card-padding">
 
-      {/* Search */}
-      <div className={getSearchWidth()}>
+      {/* Search Section */}
+      <div className="flex-1">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
 
@@ -56,16 +47,16 @@ export function FilterSection({
         </div>
       </div>
 
-      {/* Filters */}
+      {/* Filters Section */}
       {filters.length > 0 && (
-        <div className="flex gap-3 flex-wrap md:justify-end">
+        <div className="flex gap-3 flex-wrap shrink-0">
           {filters.map((filter, idx) => (
             <Select
               key={idx}
               value={filter.value ?? ""}
               onValueChange={filter.onChange}
             >
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder={filter.label} />
               </SelectTrigger>
 

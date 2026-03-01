@@ -31,11 +31,11 @@ export function FormField({
   onChange,
   required,
   error,
-  options,
+  options = [],
   disabled,
 }: FormFieldProps) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <Label>
         {label}
         {required && <span className="text-red-500">*</span>}
@@ -44,28 +44,41 @@ export function FormField({
       {type === "textarea" ? (
         <Textarea
           placeholder={placeholder}
-          value={value}
+          value={value ?? ""}
           onChange={(e) => onChange?.(e.target.value)}
           disabled={disabled}
         />
       ) : type === "select" ? (
-        <Select value={value} onValueChange={onChange}>
-          <SelectTrigger disabled={disabled}>
+        <Select
+          value={value ?? ""}
+          onValueChange={(val) => onChange?.(val)}
+        >
+          <SelectTrigger className="w-full" disabled={disabled}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
+
           <SelectContent>
-            {options?.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
+            {options.length > 0 ? (
+              options.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                >
+                  {option.label}
+                </SelectItem>
+              ))
+            ) : (
+              <SelectItem value="no-options" disabled>
+                No options available
               </SelectItem>
-            ))}
+            )}
           </SelectContent>
         </Select>
       ) : (
         <Input
           type={type}
           placeholder={placeholder}
-          value={value}
+          value={value ?? ""}
           onChange={(e) => onChange?.(e.target.value)}
           disabled={disabled}
         />

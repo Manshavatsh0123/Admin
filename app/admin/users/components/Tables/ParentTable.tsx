@@ -9,8 +9,40 @@ const mockParents = [
     email: "rahul.singh@example.com",
     relationship: "Father",
     children: 2,
-    phone: "1234567890",
+    phone: "9876543210",
     status: "active",
+  },
+  {
+    name: "Anita Sharma",
+    email: "anita.sharma@example.com",
+    relationship: "Mother",
+    children: 1,
+    phone: "9123456780",
+    status: "inactive",
+  },
+  {
+    name: "Vikram Patel",
+    email: "vikram.patel@example.com",
+    relationship: "Guardian",
+    children: 3,
+    phone: "9988776655",
+    status: "active",
+  },
+  {
+    name: "Meera Nair",
+    email: "meera.nair@example.com",
+    relationship: "Mother",
+    children: 2,
+    phone: "9090909090",
+    status: "active",
+  },
+  {
+    name: "Arjun Verma",
+    email: "arjun.verma@example.com",
+    relationship: "Father",
+    children: 1,
+    phone: "9345678123",
+    status: "inactive",
   },
 ]
 
@@ -34,11 +66,10 @@ export default function ParentTable() {
       accessorKey: "status",
       cell: (value) => (
         <span
-          className={`px-3 py-1 rounded-full text-xs font-medium ${
-            value === "active"
+          className={`px-3 py-1 rounded-full text-xs font-medium ${value === "active"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-600"
-          }`}
+            }`}
         >
           {value === "active" ? "Active" : "Inactive"}
         </span>
