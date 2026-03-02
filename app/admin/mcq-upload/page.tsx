@@ -3,100 +3,90 @@ import PageInfoBar from '@/components/global/PageInfoBar'
 import { StatCard } from '@/components/global/StatCard'
 import BulkForm from './components/BulkForm'
 import { ColumnDef, DataTable } from '../grade/subject/components/DataTable'
-import { Pencil, Trash2 } from 'lucide-react'
-import { StatusBadge } from '../grade/subject/components/StatusBadge'
+import { FileText } from "lucide-react"
 
-const mockData = [
+type UploadHistory = {
+  filename: string
+  course: string
+  questions: number
+  date: string
+  status: "completed" | "processing"
+}
+
+const uploadHistoryData: UploadHistory[] = [
   {
-    id: 1,
-    grade: "Grade 4",
-    subjectName: "Math Basics",
-    level: "GCSE",
-    status: "active",
+    filename: "Maths_Questions_Jan2026.csv",
+    course: "Mathematics",
+    questions: 250,
+    date: "2026-01-15",
+    status: "completed",
   },
   {
-    id: 2,
-    grade: "Grade 5",
-    subjectName: "English Literature",
-    level: "Secondary",
-    status: "active",
+    filename: "English_Literature_MCQ.xlsx",
+    course: "English",
+    questions: 180,
+    date: "2026-01-14",
+    status: "completed",
   },
   {
-    id: 3,
-    grade: "Grade 7",
-    subjectName: "Science Methods",
-    level: "Primary",
-    status: "active",
-  },
-  {
-    id: 4,
-    grade: "Grade 6",
-    subjectName: "Reasoning Concepts",
-    level: "Primary",
-    status: "active",
-  },
-  {
-    id: 5,
-    grade: "Grade 5",
-    subjectName: "Reasoning Foundation",
-    level: "Secondary",
-    status: "draft",
+    filename: "Science_Questions.csv",
+    course: "Science",
+    questions: 320,
+    date: "2026-01-13",
+    status: "processing",
   },
 ]
 
 export default function Page() {
 
-  const columns: ColumnDef[] = [
+  const columns: ColumnDef<UploadHistory>[] = [
     {
-      id: "grade",
-      header: "Grades",
-      accessorKey: "grade",
+      id: "filename",
+      header: "Filename",
+      accessorKey: "filename",
+      cell: (value) => (
+        <div className="flex items-center gap-2">
+          <FileText className="w-4 h-4 text-gray-500" />
+          <span className="font-medium text-gray-800">{value}</span>
+        </div>
+      ),
     },
     {
-      id: "subjectName",
-      header: "Subject Name",
-      accessorKey: "subjectName",
+      id: "course",
+      header: "Course",
+      accessorKey: "course",
+      cell: (value) => (
+        <span className="text-gray-600">{value}</span>
+      ),
     },
     {
-      id: "level",
-      header: "Level",
-      accessorKey: "level",
+      id: "questions",
+      header: "Questions",
+      accessorKey: "questions",
+    },
+    {
+      id: "date",
+      header: "Date",
+      accessorKey: "date",
+      cell: (value) => (
+        <span className="text-gray-600">{value}</span>
+      ),
     },
     {
       id: "status",
       header: "Status",
       accessorKey: "status",
-      cell: (value: string) => (
-        <StatusBadge
-          status={value === "active" ? "active" : "pending"}
-          label={value === "active" ? "Active" : "Draft"}
-        />
+      cell: (value) => (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-medium ${value === "completed"
+              ? "bg-green-100 text-green-700"
+              : "bg-blue-100 text-blue-700"
+            }`}
+        >
+          {value === "completed" ? "Completed" : "Processing"}
+        </span>
       ),
     },
-    {
-      id: "actions",
-      header: "Actions",
-      accessorKey: "id",
-      cell: (_: any, row?: any) => (
-        <div className="flex items-center gap-4">
-          <Pencil
-            className="w-4 h-4 text-black cursor-pointer hover:text-gray-600"
-            onClick={(e) => {
-              e.stopPropagation()
-              console.log("Edit", row)
-            }}
-          />
-          <Trash2
-            className="w-4 h-4 text-gray-600 cursor-pointer hover:text-red-600"
-            onClick={(e) => {
-              e.stopPropagation()
-              console.log("Delete", row)
-            }}
-          />
-        </div>
-      ),
-    }
-
   ]
 
   return (
@@ -109,12 +99,11 @@ export default function Page() {
       <div className="grid grid-cols-3 gap-4 card-padding">
         <StatCard label="Total Uploads" value={5} />
         <StatCard label="Total Questions" value="500" />
-        <StatCard label="Success Rate" value="67%" />
       </div>
 
       <BulkForm />
 
-      <DataTable columns={columns} data={mockData} />
+      <DataTable columns={columns} data={uploadHistoryData} />
 
     </>
   );

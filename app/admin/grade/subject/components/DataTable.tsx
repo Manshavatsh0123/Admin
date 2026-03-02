@@ -12,9 +12,14 @@ export type ColumnDef<T> = {
 interface DataTableProps<T> {
   columns: ColumnDef<T>[]
   data: T[]
+  onRowClick?: (row: T) => void
 }
 
-export function DataTable<T>({ columns, data }: DataTableProps<T>) {
+export function DataTable<T>({
+  columns,
+  data,
+  onRowClick,
+}: DataTableProps<T>) {
   return (
     <div className="border rounded-xl overflow-hidden bg-white card-padding">
       <table className="w-full text-sm">
@@ -30,7 +35,12 @@ export function DataTable<T>({ columns, data }: DataTableProps<T>) {
 
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="border-t">
+            <tr
+              key={rowIndex}
+              className={`border-t ${onRowClick ? "cursor-pointer hover:bg-gray-50" : ""
+                }`}
+              onClick={() => onRowClick?.(row)}
+            >
               {columns.map((column) => {
                 const value = row[column.accessorKey]
 

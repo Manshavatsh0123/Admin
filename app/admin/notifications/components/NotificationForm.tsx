@@ -1,75 +1,103 @@
 "use client"
 
-import SelectField from "@/components/forms/SelectField"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { notificationSchema, NotificationFormValues } from "@/components/schemas/notification.schema"
+import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
-import { FormField } from "../../grade/subject/components/FormField"
 
-export default function NotificationForm() {
+interface NotificationFormProps {
+  onCancel?: () => void
+}
 
-    return (
-        <div className="bg-[#F6F6F6] rounded-3xl p-8 w-full mt-6.5">
+export default function NotificationForm({ onCancel }: NotificationFormProps) {
 
-            <h2 className="text-[18px] font-semibold mb-6">
-                Create Notification
-            </h2>
+  const form = useForm<NotificationFormValues>({
+    resolver: zodResolver(notificationSchema),
+    defaultValues: {
+      sendTo: "all",
+      channel: "both",
+    },
+  })
 
-            <div className="mb-6">
-                <FormField
-                    label="Title"
-                    placeholder="Notification Title"
-                />
-            </div>
+  const onSubmit = (data: NotificationFormValues) => {
+    console.log("Notification Data:", data)
+  }
 
-            <div className="mb-6">
-                <FormField
-                    label="Message"
-                    placeholder="Write your message here..."
-                    type="textarea"
-                />
-            </div>
+  return (
+    <div className="bg-[#F6F6F6] rounded-3xl p-8 w-full mt-6.5">
 
-            {/* Row: Send To + Channel */}
-            <div className="grid grid-cols-2 gap-5 mb-6">
+      <h2 className="text-[18px] font-semibold mb-6">
+        Create Notification
+      </h2>
 
-                <SelectField
-                    label="Send To"
-                    placeholder="All Users"
-                    options={[
-                        { label: "All Users", value: "all" },
-                        { label: "Students", value: "students" },
-                        { label: "Tutors", value: "tutors" },
-                        { label: "Parents", value: "parents" },
-                    ]}
-                />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
-                <SelectField
-                    label="Channel"
-                    placeholder="Both Email and Dashboard"
-                    options={[
-                        { label: "Email Only", value: "email" },
-                        { label: "Dashboard Only", value: "dashboard" },
-                        { label: "Both Email and Dashboard", value: "both" },
-                    ]}
-                />
+        {/* Title */}
+        <RHFField
+          name="title"
+          label="Title"
+          placeholder="Notification Title"
+          control={form.control}
+        />
 
-            </div>
+        {/* Message */}
+        <RHFField
+          name="message"
+          label="Message"
+          type="textarea"
+          placeholder="Write your message here..."
+          control={form.control}
+        />
 
-            {/* Buttons */}
-            <div className="flex items-center gap-4">
+        {/* Send To + Channel */}
+        <div className="grid grid-cols-2 gap-5">
 
-                <AppButton
-                    ctaText="Send Notification"
-                    showIcon={false}
-                />
+          <RHFField
+            name="sendTo"
+            label="Send To"
+            type="select"
+            control={form.control}
+            options={[
+              { label: "All Users", value: "all" },
+              { label: "Students", value: "students" },
+              { label: "Tutors", value: "tutors" },
+              { label: "Parents", value: "parents" },
+            ]}
+          />
 
-                <AppButton
-                    ctaText="Cancel"
-                    variant="outline"
-                    showIcon={false}
-                />
-
-            </div>
+          <RHFField
+            name="channel"
+            label="Channel"
+            type="select"
+            control={form.control}
+            options={[
+              { label: "Email Only", value: "email" },
+              { label: "Dashboard Only", value: "dashboard" },
+              { label: "Both Email and Dashboard", value: "both" },
+            ]}
+          />
 
         </div>
-    )
+
+        {/* Buttons */}
+        <div className="flex items-center gap-4">
+
+          <AppButton
+            ctaText="Send Notification"
+            showIcon={false}
+          />
+
+          <AppButton
+            onClick={onCancel}
+            ctaText="Cancel"
+            variant="outline"
+            showIcon={false}
+          />
+
+        </div>
+
+      </form>
+    </div>
+  )
 }

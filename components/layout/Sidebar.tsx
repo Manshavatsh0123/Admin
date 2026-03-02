@@ -44,11 +44,12 @@ export default function AdminSidebar({ collapsed }: Props) {
     },
     { label: "Post", icon: FileText, href: "/admin/post" },
     { label: "FAQs", icon: HelpCircle, href: "/admin/faqs" },
-    { label: "Student Profile", icon: User, href: "/admin/student-profile" },
     { label: "MCQ Upload", icon: Upload, href: "/admin/mcq-upload" },
+    { label: "Result & Review", icon: Upload, href: "/admin/result-review" },
     { label: "Notifications", icon: Bell, href: "/admin/notifications" },
     { label: "Support", icon: Headphones, href: "/admin/support" },
-    { label: "Tutors", icon: Users, href: "/admin/tutors" },
+    { label: "Audit Logs", icon: ShieldCheck, href: "/admin/audit-logs" },
+    { label: "Badges & Rewards", icon: Users, href: "/admin/badges-rewards" },
     {
       label: "Users", icon: User,
       children: [
@@ -57,8 +58,6 @@ export default function AdminSidebar({ collapsed }: Props) {
         { label: "Tutor", href: "/admin/users/tutor" },
       ],
     },
-    { label: "Audit Logs", icon: ShieldCheck, href: "/admin/audit-logs" },
-    { label: "Coupons", icon: Ticket, href: "/admin/coupons" },
     { label: "Payment History", icon: CreditCard, href: "/admin/payment-history" },
   ]
 

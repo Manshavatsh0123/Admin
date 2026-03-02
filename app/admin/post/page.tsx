@@ -9,53 +9,78 @@ import { FilterSection } from "../grade/subject/components/FilterOption"
 import { ColumnDef, DataTable } from "../grade/subject/components/DataTable"
 import PostForm from "./components/PostForm"
 
-const mockData = [
+type BlogPost = {
+    id: number
+    title: string
+    labels: string
+    category: string
+    date: string
+    status: "published" | "scheduled" | "draft"
+}
+
+const mockData: BlogPost[] = [
     {
         id: 1,
-        title: "Tips for GCSE Mathematics Success",
-        labels: "11 Plus, GCSE",
-        category: "Study Tips",
-        date: "2026-01-15",
+        title: "10 Proven Strategies to Score Higher in GCSE Mathematics",
+        labels: "GCSE, Mathematics",
+        category: "Exam Preparation",
+        date: "2026-02-05",
         status: "published",
     },
     {
         id: 2,
-        title: "Understanding English Literature Essays",
-        labels: "11 Plus, GCSE",
-        category: "Learning Guide",
-        date: "2026-01-12",
+        title: "How to Structure a Perfect English Literature Essay",
+        labels: "GCSE, English",
+        category: "Writing Skills",
+        date: "2026-02-01",
         status: "published",
     },
     {
         id: 3,
-        title: "Parent's Guide to Online Learning",
-        labels: "11 Plus, GCSE",
-        category: "Parent Tips",
-        date: "2026-01-10",
+        title: "A Parent’s Complete Guide to Supporting Online Learning",
+        labels: "Parents, Learning",
+        category: "Parent Resources",
+        date: "2026-01-28",
         status: "published",
     },
     {
         id: 4,
-        title: "Top reasoning tips to become expert",
-        labels: "11 Plus, GCSE",
-        category: "Educational",
-        date: "2026-01-20",
+        title: "Mastering Verbal Reasoning for 11 Plus Exams",
+        labels: "11 Plus, Reasoning",
+        category: "Study Tips",
+        date: "2026-02-10",
         status: "scheduled",
     },
     {
         id: 5,
-        title: "New Features Released This Month",
-        labels: "11 Plus, GCSE",
-        category: "News",
-        date: "2026-01-16",
+        title: "Platform Update: New Dashboard Features Explained",
+        labels: "Platform, Updates",
+        category: "Announcements",
+        date: "2026-02-03",
         status: "draft",
+    },
+    {
+        id: 6,
+        title: "Top 5 Science Revision Techniques That Actually Work",
+        labels: "GCSE, Science",
+        category: "Revision Tips",
+        date: "2026-01-30",
+        status: "published",
+    },
+    {
+        id: 7,
+        title: "How to Stay Consistent During Exam Season",
+        labels: "Motivation, Students",
+        category: "Student Success",
+        date: "2026-02-07",
+        status: "scheduled",
     },
 ]
 
 function page() {
     const [isModalOpen, setIsModalOpen] = React.useState(false)
 
-    const columns: ColumnDef[] = [
+    const columns: ColumnDef<BlogPost>[] = [
         {
             id: "title",
             header: "Title",
@@ -80,7 +105,7 @@ function page() {
             id: "status",
             header: "Status",
             accessorKey: "status",
-            cell: (value: string) => {
+            cell: (value, row) => {
                 let statusType: "active" | "pending" | "draft" = "draft"
                 let label = "Draft"
 
@@ -92,11 +117,6 @@ function page() {
                 if (value === "scheduled") {
                     statusType = "pending"
                     label = "Scheduled"
-                }
-
-                if (value === "draft") {
-                    statusType = "draft"
-                    label = "Draft"
                 }
 
                 return (
@@ -111,7 +131,7 @@ function page() {
             id: "actions",
             header: "Actions",
             accessorKey: "id",
-            cell: (_: any, row?: any) => (
+            cell: (_, row) => (
                 <div className="flex items-center gap-4">
                     <Pencil
                         size={16}
@@ -122,7 +142,6 @@ function page() {
                             console.log("Edit", row)
                         }}
                     />
-
                     <Trash2
                         size={16}
                         strokeWidth={1.5}
@@ -136,6 +155,7 @@ function page() {
             ),
         },
     ]
+
     return (
         <>
             <PageInfoBar
@@ -169,7 +189,8 @@ function page() {
                 ]}
             />
 
-            <DataTable columns={columns} data={mockData} />
+            <DataTable<BlogPost>
+                columns={columns} data={mockData} />
         </>
     );
 }

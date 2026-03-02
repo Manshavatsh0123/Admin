@@ -32,12 +32,6 @@ const initialNotifications = [
     },
 ]
 
-const tickets = [
-    { handler: "Student1", ticketId: "12345678", assignee: "Tutor1", status: "open" },
-    { handler: "Student2", ticketId: "12345678", assignee: "Tutor2", status: "in-progress" },
-    { handler: "Parent", ticketId: "12345678", assignee: "Tutor3", status: "resolved" },
-]
-
 function page() {
     const [search, setSearch] = useState("")
     const [notifications, setNotifications] = useState(initialNotifications)
@@ -60,7 +54,20 @@ function page() {
         item.title.toLowerCase().includes(search.toLowerCase())
     )
 
-    const ticketColumns: ColumnDef[] = [
+    type Ticket = {
+        handler: string
+        ticketId: string
+        assignee: string
+        status: "open" | "in-progress" | "resolved"
+    }
+
+    const tickets: Ticket[] = [
+        { handler: "Student1", ticketId: "12345678", assignee: "Tutor1", status: "open" },
+        { handler: "Student2", ticketId: "12345678", assignee: "Tutor2", status: "in-progress" },
+        { handler: "Parent", ticketId: "12345678", assignee: "Tutor3", status: "resolved" },
+    ]
+
+    const ticketColumns: ColumnDef<Ticket>[] = [
         { id: "handler", header: "Handler", accessorKey: "handler" },
         { id: "ticketId", header: "Ticket ID", accessorKey: "ticketId" },
         { id: "assignee", header: "Assignee", accessorKey: "assignee" },
@@ -150,7 +157,10 @@ function page() {
             </div>
 
 
-            <DataTable columns={ticketColumns} data={tickets} />
+            <DataTable<Ticket>
+                columns={ticketColumns}
+                data={tickets}
+            />
         </>
     );
 }

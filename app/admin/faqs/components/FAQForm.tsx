@@ -1,82 +1,96 @@
 "use client"
-import * as React from "react"
+
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import {
+  faqSchema,
+  FAQFormValues,
+} from "@/components/schemas/faq.schema"
+import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
-import { FormField } from "../../grade/subject/components/FormField"
 
-const FAQForm = () => {
+export default function FAQForm() {
 
-  const [form, setForm] = React.useState({
-    question: "",
-    answer: "",
-    category: "",
+  const form = useForm<FAQFormValues>({
+    resolver: zodResolver(faqSchema),
+    defaultValues: {
+      question: "",
+      answer: "",
+      category: "",
+    },
   })
 
-  const handleChange = (field: string, value: string) => {
-    setForm(prev => ({
-      ...prev,
-      [field]: value
-    }))
+  const onSubmit = (data: FAQFormValues) => {
+    console.log("FAQ Data:", data)
+
+    // Later API:
+    // await fetch("/api/faq", { method: "POST", body: JSON.stringify(data) })
+
+    form.reset()
   }
 
   return (
     <div className="bg-[#F6F6F6] rounded-2xl p-6 w-full mt-6">
 
-      {/* Heading */}
       <h2 className="text-[18px] font-semibold text-[#1E1E1E] mb-6">
         Create New FAQ
       </h2>
 
-      {/* Question */}
-      <div className="mb-5">
-        <FormField
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-5"
+      >
+
+        {/* Question */}
+        <RHFField
+          name="question"
           label="Question"
           placeholder="What is your question?"
-          value={form.question}
-          onChange={(value) => handleChange("question", value)}
+          control={form.control}
         />
-      </div>
 
-      {/* Answer */}
-      <div className="mb-5">
-        <FormField
+        {/* Answer */}
+        <RHFField
+          name="answer"
           label="Answer"
-          placeholder="Provide a detailed answer..."
           type="textarea"
-          value={form.answer}
-          onChange={(value) => handleChange("answer", value)}
-        />
-      </div>
-
-      {/* Category */}
-      <div className="mb-6 max-w-[400px]">
-        <FormField
-          label="Category Name"
-          placeholder="Enter category name"
-          value={form.category}
-          onChange={(value) => handleChange("category", value)}
-        />
-      </div>
-
-      {/* Buttons */}
-      <div className="flex items-center gap-3">
-
-        <AppButton
-          ctaText="Create FAQ"
-          showIcon={false}
-          className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
+          placeholder="Provide a detailed answer..."
+          control={form.control}
         />
 
-        <AppButton
-          ctaText="Cancel"
-          variant="outline"
-          showIcon={false}
-          className="px-5 py-2 rounded-lg text-[14px]"
-        />
+        {/* Category */}
+        <div className="max-w-[400px]">
+          <RHFField
+            name="category"
+            label="Category Name"
+            placeholder="Enter category name"
+            control={form.control}
+          />
+        </div>
 
-      </div>
+        {/* Buttons */}
+        <div className="flex items-center gap-3 pt-2">
+
+          <AppButton
+            type="submit"
+            ctaText="Create FAQ"
+            showIcon={false}
+            className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
+          />
+
+          <AppButton
+            type="button"
+            ctaText="Cancel"
+            variant="outline"
+            showIcon={false}
+            className="px-5 py-2 rounded-lg text-[14px]"
+            onClick={() => form.reset()}
+          />
+
+        </div>
+
+      </form>
 
     </div>
   )
 }
-
-export default FAQForm

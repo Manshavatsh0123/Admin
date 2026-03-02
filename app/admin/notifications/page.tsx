@@ -25,7 +25,6 @@ function page() {
             <FilterSection
                 searchPlaceholder="Search notification..."
                 onSearch={(value) => console.log(value)}
-                onReset={() => console.log("Reset")}
             />
 
             <NotificationList
