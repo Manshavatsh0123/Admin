@@ -5,7 +5,6 @@ import { FormField } from "./FormField"
 import SelectField from "@/components/forms/SelectField"
 import TextAreaField from "@/components/forms/TextAreaField"
 import DynamicInputList from "@/components/forms/DynamicInputList"
-import FormSection from "@/components/forms/FormSection"
 import AppButton from "@/components/global/Button"
 import FileUpload from "@/components/forms/Select"
 
@@ -45,12 +44,7 @@ export default function CreateSubjectForm() {
           ]}
         />
 
-        <FormSection>
-          <FileUpload
-            label="Subject Icon"
-            variant="small"
-          />
-        </FormSection>
+    
 
         <SelectField
           label="Duration"

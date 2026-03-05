@@ -90,12 +90,15 @@ export default function BadgeForm() {
                             type="submit"
                             ctaText="Create Badge"
                             showIcon={false}
+                            className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
                         />
+
                         <AppButton
                             type="button"
                             ctaText="Cancel"
-                            variantStyle="outline"
+                            variant="outline"
                             showIcon={false}
+                            className="px-5 py-2 rounded-lg text-[14px]"
                             onClick={() => badgeForm.reset()}
                         />
                     </div>
@@ -143,12 +146,15 @@ export default function BadgeForm() {
                             type="submit"
                             ctaText="Create Reward"
                             showIcon={false}
+                            className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
                         />
+
                         <AppButton
                             type="button"
                             ctaText="Cancel"
-                            variantStyle="outline"
+                            variant="outline"
                             showIcon={false}
+                            className="px-5 py-2 rounded-lg text-[14px]"
                             onClick={() => rewardForm.reset()}
                         />
                     </div>

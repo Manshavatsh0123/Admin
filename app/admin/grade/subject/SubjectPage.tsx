@@ -52,58 +52,7 @@ const SubjectPage = () => {
 
     const [isModalOpen, setIsModalOpen] = React.useState(false)
 
-    const columns: ColumnDef[] = [
-        {
-            id: "grade",
-            header: "Grades",
-            accessorKey: "grade",
-        },
-        {
-            id: "subjectName",
-            header: "Subject Name",
-            accessorKey: "subjectName",
-        },
-        {
-            id: "level",
-            header: "Level",
-            accessorKey: "level",
-        },
-        {
-            id: "status",
-            header: "Status",
-            accessorKey: "status",
-            cell: (value: string) => (
-                <StatusBadge
-                    status={value === "active" ? "active" : "pending"}
-                    label={value === "active" ? "Active" : "Draft"}
-                />
-            ),
-        },
-        {
-            id: "actions",
-            header: "Actions",
-            accessorKey: "id",
-            cell: (_: any, row?: any) => (
-                <div className="flex items-center gap-4">
-                    <Pencil
-                        className="w-4 h-4 text-black cursor-pointer hover:text-gray-600"
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            console.log("Edit", row)
-                        }}
-                    />
-                    <Trash2
-                        className="w-4 h-4 text-gray-600 cursor-pointer hover:text-red-600"
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            console.log("Delete", row)
-                        }}
-                    />
-                </div>
-            ),
-        }
-
-    ]
+    
 
     return (
         <>
@@ -137,7 +86,7 @@ const SubjectPage = () => {
                 ]}
             />
 
-            <DataTable columns={columns} data={mockData} />
+            
         </>
     )
 }

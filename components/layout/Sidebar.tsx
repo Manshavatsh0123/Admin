@@ -34,12 +34,11 @@ export default function AdminSidebar({ collapsed }: Props) {
   const items = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
     {
-      label: "Grade",
+      label: "Course",
       icon: BookOpen,
       children: [
-        { label: "Subjects", href: "/admin/grade/subject" },
-        { label: "Chapters", href: "/admin/grade/chapter" },
-        { label: "Topics", href: "/admin/grade/topic" },
+        { label: "Manage Courses", href: "/admin/course/manage-courses" },
+        { label: "Coupons", href: "/admin/course/coupons" },
       ],
     },
     { label: "Post", icon: FileText, href: "/admin/post" },

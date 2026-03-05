@@ -84,15 +84,19 @@ export default function NotificationForm({ onCancel }: NotificationFormProps) {
         <div className="flex items-center gap-4">
 
           <AppButton
+            type="submit"
             ctaText="Send Notification"
             showIcon={false}
+            className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
           />
 
           <AppButton
-            onClick={onCancel}
+            type="button"
             ctaText="Cancel"
             variant="outline"
             showIcon={false}
+            className="px-5 py-2 rounded-lg text-[14px]"
+            onClick={() => form.reset()}
           />
 
         </div>

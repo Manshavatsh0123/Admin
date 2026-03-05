@@ -15,8 +15,8 @@ import {
 
 interface DatePickerFieldProps {
   label: string
-  value?: Date
-  onChange?: (date: Date | undefined) => void
+  value?: Date | null
+  onChange?: (date: Date | null) => void
   placeholder?: string
 }
 
@@ -24,20 +24,25 @@ export function DatePickerField({
   label,
   value,
   onChange,
-  placeholder = "Pick a date",
+  placeholder = "dd-mm-yyyy",
 }: DatePickerFieldProps) {
 
-  const [date, setDate] = React.useState<Date | undefined>(value)
+  const [date, setDate] = React.useState<Date | null>(value ?? null)
+
+  React.useEffect(() => {
+    setDate(value ?? null)
+  }, [value])
 
   const handleSelect = (selectedDate: Date | undefined) => {
-    setDate(selectedDate)
-    onChange?.(selectedDate)
+    const newDate = selectedDate ?? null
+    setDate(newDate)
+    onChange?.(newDate)
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
 
-      <label className="text-sm font-medium">
+      <label className="text-[14px] font-medium text-black">
         {label}
       </label>
 
@@ -46,18 +51,19 @@ export function DatePickerField({
         <PopoverTrigger asChild>
 
           <Button
+            type="button"
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              "w-full h-[42px] px-2 flex items-center justify-between rounded-md bg-[#F6F6F6]",
+              !date && "text-black"
             )}
           >
 
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <span>
+              {date ? format(date, "dd-MM-yyyy") : placeholder}
+            </span>
 
-            {date
-              ? format(date, "dd-MM-yyyy")
-              : placeholder}
+            <CalendarIcon className="h-5 w-5 text-black" />
 
           </Button>
 
@@ -67,7 +73,7 @@ export function DatePickerField({
 
           <Calendar
             mode="single"
-            selected={date}
+            selected={date ?? undefined}
             onSelect={handleSelect}
             initialFocus
           />

@@ -61,7 +61,9 @@ export default function PageInfoBar({
             <AppButton
               ctaText={actionButtonLabel}
               onClick={onActionClick}
+              className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
             />
+            
           )}
       </div>
 
