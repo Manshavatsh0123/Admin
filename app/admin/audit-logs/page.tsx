@@ -3,10 +3,20 @@
 import { useState, useMemo } from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
 import { StatCard } from "@/components/global/StatCard"
-import { FilterSection } from "../grade/subject/components/FilterOption"
-import { DataTable, ColumnDef } from "../grade/subject/components/DataTable"
+import { FilterSection } from "../../../components/DataForm/FilterOption"
+import { DataTable, ColumnDef } from "../../../components/DataForm/DataTable"
 
-const mockData = [
+type AuditLog = {
+    id: number
+    timestamp: string
+    userType: "Student" | "Parent" | "Tutor"
+    action: string
+    details: string
+    ip: string
+    status: "success" | "failed"
+}
+
+const mockData: AuditLog[] = [
     {
         id: 1,
         timestamp: "2026-01-16 14:35:22",
@@ -38,7 +48,7 @@ const mockData = [
         id: 4,
         timestamp: "2026-01-16 14:15:33",
         userType: "Student",
-        action: "Login",
+        action: "Login Attempt",
         details: "Arjun Kumar failed login attempt",
         ip: "192.168.1.103",
         status: "failed",
@@ -75,8 +85,18 @@ function page() {
         })
     }, [search, userType, status])
 
-    const columns: ColumnDef[] = [
+    type AuditLog = {
+        timestamp: string
+        userType: "Student" | "Parent" | "Tutor"
+        action: string
+        details: string
+        ip: string
+        status: "success" | "failed"
+    }
+
+    const columns: ColumnDef<AuditLog>[] = [
         { id: "timestamp", header: "Timestamp", accessorKey: "timestamp" },
+
         {
             id: "userType",
             header: "User Type",
@@ -87,6 +107,7 @@ function page() {
                     Parent: "bg-purple-100 text-purple-700",
                     Tutor: "bg-green-100 text-green-700",
                 }
+
                 return (
                     <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${colorMap[value] || "bg-gray-100 text-gray-700"
@@ -97,19 +118,27 @@ function page() {
                 )
             },
         },
+
         { id: "action", header: "Action", accessorKey: "action" },
+
         {
             id: "details",
             header: "Details",
             accessorKey: "details",
-            cell: (value) => <span className="text-gray-600">{value}</span>,
+            cell: (value) => (
+                <span className="text-gray-600">{value}</span>
+            ),
         },
+
         {
             id: "ip",
             header: "IP Address",
             accessorKey: "ip",
-            cell: (value) => <span className="text-gray-500">{value}</span>,
+            cell: (value) => (
+                <span className="text-gray-500">{value}</span>
+            ),
         },
+
         {
             id: "status",
             header: "Status",
@@ -164,7 +193,10 @@ function page() {
                 onSearch={setSearch}
             />
 
-            <DataTable columns={columns} data={filteredData} />
+            <DataTable<AuditLog>
+                columns={columns}
+                data={filteredData}
+            />
         </>
     );
 }

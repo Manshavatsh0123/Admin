@@ -2,7 +2,7 @@
 import PageInfoBar from '@/components/global/PageInfoBar'
 import { StatCard } from '@/components/global/StatCard'
 import BulkForm from './components/BulkForm'
-import { ColumnDef, DataTable } from '../grade/subject/components/DataTable'
+import { ColumnDef, DataTable } from '../../../components/DataForm/DataTable'
 import { FileText } from "lucide-react"
 
 type UploadHistory = {

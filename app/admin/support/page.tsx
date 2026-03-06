@@ -3,9 +3,9 @@
 import { useState } from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
 import { StatCard } from "@/components/global/StatCard"
-import { DataTable, ColumnDef } from "../grade/subject/components/DataTable"
+import { DataTable, ColumnDef } from "../../../components/DataForm/DataTable"
 import { Pencil } from "lucide-react"
-import { FilterSection } from "../grade/subject/components/FilterOption"
+import { FilterSection } from "../../../components/DataForm/FilterOption"
 import { SupportCard } from "./components/SupportCard"
 
 const initialNotifications = [

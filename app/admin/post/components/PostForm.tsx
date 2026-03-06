@@ -5,7 +5,7 @@ import * as React from "react"
 import SelectField from "@/components/forms/SelectField"
 import FileUpload from "@/components/forms/Select"
 import AppButton from "@/components/global/Button"
-import { FormField } from "../../grade/subject/components/FormField"
+import { FormField } from "../../../../components/DataForm/FormField"
 import { DatePickerField } from "@/components/forms/DatePickerField"
 
 export default function PostForm() {

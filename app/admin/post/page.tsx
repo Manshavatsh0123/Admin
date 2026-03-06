@@ -4,9 +4,9 @@ import * as React from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
 import { Eye, Pencil, Trash2 } from "lucide-react"
 import { StatCard } from "@/components/global/StatCard"
-import { StatusBadge } from "../grade/subject/components/StatusBadge"
-import { FilterSection } from "../grade/subject/components/FilterOption"
-import { ColumnDef, DataTable } from "../grade/subject/components/DataTable"
+import { StatusBadge } from "../../../components/DataForm/StatusBadge"
+import { FilterSection } from "../../../components/DataForm/FilterOption"
+import { ColumnDef, DataTable } from "../../../components/DataForm/DataTable"
 import PostForm from "./components/PostForm"
 
 type BlogPost = {

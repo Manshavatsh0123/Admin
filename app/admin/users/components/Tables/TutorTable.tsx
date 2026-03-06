@@ -1,6 +1,6 @@
 "use client"
 
-import { DataTable, ColumnDef } from "@/app/admin/grade/subject/components/DataTable"
+import { DataTable, ColumnDef } from "@/components/DataForm/DataTable"
 import { Pencil, Trash2 } from "lucide-react"
 
 type Tutor = {

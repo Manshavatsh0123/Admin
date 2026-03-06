@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { FilterSection } from "@/app/admin/grade/subject/components/FilterOption"
+import { FilterSection } from "@/components/DataForm/FilterOption"
 
 type Role = "student" | "parent" | "tutor"
 

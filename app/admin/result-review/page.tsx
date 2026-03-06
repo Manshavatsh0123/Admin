@@ -2,8 +2,8 @@
 
 import { useState, useMemo } from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
-import { FilterSection } from "@/app/admin/grade/subject/components/FilterOption"
-import { DataTable, ColumnDef } from "@/app/admin/grade/subject/components/DataTable"
+import { FilterSection } from "@/components/DataForm/FilterOption"
+import { DataTable, ColumnDef } from "@/components/DataForm/DataTable"
 import { Eye } from "lucide-react"
 
 type Result = {

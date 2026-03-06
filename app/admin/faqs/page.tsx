@@ -4,7 +4,7 @@ import { useState } from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
 import FAQAccordion, { FAQItem } from "./components/FAQAccordion"
 import { StatCard } from "@/components/global/StatCard"
-import { FilterSection } from "../grade/subject/components/FilterOption"
+import { FilterSection } from "../../../components/DataForm/FilterOption"
 import FAQForm from "./components/FAQForm"
 
 const initialFAQs: FAQItem[] = [

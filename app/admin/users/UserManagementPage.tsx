@@ -3,11 +3,11 @@
 import { useState } from "react"
 import PageInfoBar from "@/components/global/PageInfoBar"
 import { StatCard } from "@/components/global/StatCard"
-import { DataTable, ColumnDef } from "../grade/subject/components/DataTable"
+import { DataTable, ColumnDef } from "../../../components/DataForm/DataTable"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Pencil, Trash2 } from "lucide-react"
-import { FilterSection } from "../grade/subject/components/FilterOption"
+import { FilterSection } from "../../../components/DataForm/FilterOption"
 
 
 const mockUsers = [
