@@ -15,7 +15,7 @@ export default function SettingsLayout({
     const pathname = usePathname()
 
     return (
-        <AdminLayout>
+        <>
 
             <PageInfoBar
                 showBack={true}
@@ -56,6 +56,6 @@ export default function SettingsLayout({
 
             </div>
 
-        </AdminLayout>
+        </>
     )
 }

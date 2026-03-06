@@ -49,7 +49,7 @@ export default function Page() {
 
       <div className="flex items-center gap-3 pt-2">
         <AppButton ctaText="Cancel" variant="outline" />
-        <AppButton ctaText="Save Changes" />
+        <AppButton ctaText="Save Changes" className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium" />
       </div>
 
     </div>
