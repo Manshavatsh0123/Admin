@@ -4,12 +4,7 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Plus, Pencil, Trash2 } from "lucide-react"
-
-import {
-    topicSchema,
-    TopicFormValues,
-} from "@/components/schemas/topic.schema"
-
+import {topicSchema, TopicFormValues} from "@/components/schemas/topic.schema"
 import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
 
@@ -50,7 +45,7 @@ export default function Topics() {
     }
 
     return (
-        <div className="bg-[#F6F6F6] rounded-3xl p-8 w-full mt-6">
+        <div className="p-8">
 
             {/* New Topic Button */}
             <button

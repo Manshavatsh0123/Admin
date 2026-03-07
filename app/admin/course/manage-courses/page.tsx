@@ -2,10 +2,14 @@
 
 import { useState } from "react"
 import CourseLayout from "./layout/CourseLayout"
-import Basic from "./sections/Basic"
-import Overview from "./sections/Overview"
-import Pricing from "./sections/Pricing"
-import Chapters from "./sections/curriculum/Chapters"
+import Overview from "./sections/overview/page"
+import CourseBasicForm from "./sections/basic/page"
+import PricingForm from "./sections/pricing/page"
+import Topics from "./sections/curriculum/topics/page"
+import AssignmentPage from "./sections/curriculum/assignment/page"
+import Resources from "./sections/curriculum/resources/page"
+import AssessmentPage from "./sections/curriculum/assessment/page"
+import ChaptersPage from "./sections/curriculum/chapters/page"
 
 export type CourseSection =
   | "basic"
@@ -21,24 +25,20 @@ export default function Page() {
 
   const [section, setSection] = useState<CourseSection>("basic")
 
-  const renderSection = () => {
-    switch (section) {
-      case "basic":
-        return <Basic />
-      case "overview":
-        return <Overview />
-      case "chapters":
-        return <Chapters />
-      case "pricing":
-        return <Pricing />
-      default:
-        return <Basic />
-    }
+  const sections: Record<CourseSection, React.ReactNode> = {
+    basic: <CourseBasicForm />,
+    overview: <Overview />,
+    chapters: <ChaptersPage />,
+    topics: <Topics />,
+    assignment: <AssignmentPage />,
+    resources: <Resources />,
+    assessment: <AssessmentPage />,
+    pricing: <PricingForm />,
   }
 
   return (
     <CourseLayout section={section} setSection={setSection}>
-      {renderSection()}
+      {sections[section]}
     </CourseLayout>
   )
 }

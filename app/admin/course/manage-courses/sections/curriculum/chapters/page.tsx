@@ -19,7 +19,7 @@ type Chapter = {
   duration: string
 }
 
-const chaptersPage = () => {
+const ChaptersPage = () => {
 
   const [chapters, setChapters] = useState<Chapter[]>([
     {
@@ -140,4 +140,4 @@ const chaptersPage = () => {
   )
 }
 
-export default chaptersPage
+export default ChaptersPage

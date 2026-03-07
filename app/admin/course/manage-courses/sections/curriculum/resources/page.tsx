@@ -46,7 +46,7 @@ export default function Resources() {
   }
 
   return (
-    <div className="bg-[#F6F6F6] rounded-3xl p-8 w-full mt-6">
+    <div className="px-8">
 
       {/* Header */}
       <button className="flex items-center gap-2 bg-[#D33122] text-white px-5 py-2 rounded-lg text-[14px] font-medium">
@@ -100,6 +100,7 @@ export default function Resources() {
             type="submit"
             ctaText="Add Resource"
             showIcon={false}
+            className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
           />
 
           <AppButton

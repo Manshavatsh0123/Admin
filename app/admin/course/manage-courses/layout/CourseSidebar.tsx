@@ -2,17 +2,26 @@
 
 import { useState } from "react"
 import { FileText, BookOpen, Tag, ChevronDown } from "lucide-react"
+import type { CourseSection } from "../page"
 
 type CourseSidebarProps = {
-  section: string
-  setSection: React.Dispatch<React.SetStateAction<string>>
+  section: CourseSection
+  setSection: React.Dispatch<React.SetStateAction<CourseSection>>
 }
 
 export default function CourseSidebar({ section, setSection }: CourseSidebarProps) {
 
   const [curriculumOpen, setCurriculumOpen] = useState(false)
 
-  const Item = ({ id, label, icon: Icon }: any) => (
+  const Item = ({
+    id,
+    label,
+    icon: Icon,
+  }: {
+    id: CourseSection
+    label: string
+    icon?: any
+  }) => (
     <button
       onClick={() => {
         setSection(id)
@@ -27,7 +36,13 @@ export default function CourseSidebar({ section, setSection }: CourseSidebarProp
     </button>
   )
 
-  const SubItem = ({ id, label }: any) => (
+  const SubItem = ({
+    id,
+    label,
+  }: {
+    id: CourseSection
+    label: string
+  }) => (
     <button
       onClick={() => setSection(id)}
       className={`flex items-center gap-2 pl-10 py-2 w-full text-left rounded-lg transition ${
