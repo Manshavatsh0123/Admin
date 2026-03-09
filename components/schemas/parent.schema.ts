@@ -1,15 +1,13 @@
 import { z } from "zod"
 
 export const parentSchema = z.object({
-  userType: z.literal("Parent"),
-  pronoun: z.string(),
-  fullName: z.string().min(2),
-  relationship: z.string(),
-  enrolledChildren: z.string(),
-  email: z.string().email(),
-  phone: z.string().min(10),
-  status: z.string(),
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   about: z.string().optional(),
+  relationship: z.string().min(1, "Relationship is required"),
+  phone: z.string().min(10, "Phone number required"),
+  profilePicture: z.string().optional(),
 })
 
 export type ParentFormValues = z.infer<typeof parentSchema>

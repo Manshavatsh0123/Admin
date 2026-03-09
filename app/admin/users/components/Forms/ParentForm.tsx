@@ -5,19 +5,47 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { parentSchema, ParentFormValues } from "@/components/schemas/parent.schema"
 import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
+import { useMutation } from "@tanstack/react-query"
+import apiClient from "@/lib/network"
 
 export default function ParentForm() {
 
   const form = useForm<ParentFormValues>({
     resolver: zodResolver(parentSchema),
-    defaultValues: {
-      userType: "Parent",
-      status: "Active",
+  })
+
+  const createParentMutation = useMutation({
+    mutationKey: ["createParent"],
+
+    mutationFn: async (data: ParentFormValues) => {
+
+      const token = localStorage.getItem("token")
+
+      const response = await apiClient.post(
+        "/parents",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
     },
+
+    onSuccess(data) {
+      console.log("Parent Created:", data)
+      form.reset()
+    },
+
+    onError(error: any) {
+      console.log("Create Parent Error:", error.response?.data)
+    }
   })
 
   const onSubmit = (data: ParentFormValues) => {
-    console.log("Parent Data:", data)
+    createParentMutation.mutate(data)
   }
 
   return (
@@ -32,35 +60,29 @@ export default function ParentForm() {
         className="grid grid-cols-3 gap-6"
       >
 
-        {/* User Type */}
+        {/* Name */}
         <RHFField
-          name="userType"
-          label="User Type"
-          type="select"
-          control={form.control}
-          options={[
-            { label: "Parent", value: "Parent" },
-          ]}
-        />
-
-        {/* Pronoun */}
-        <RHFField
-          name="pronoun"
-          label="Pronoun"
-          type="select"
-          control={form.control}
-          options={[
-            { label: "Mr.", value: "Mr." },
-            { label: "Mrs.", value: "Mrs." },
-            { label: "Ms.", value: "Ms." },
-          ]}
-        />
-
-        {/* Full Name */}
-        <RHFField
-          name="fullName"
+          name="name"
           label="Full Name"
           placeholder="Enter full name"
+          control={form.control}
+        />
+
+        {/* Email */}
+        <RHFField
+          name="email"
+          label="Email"
+          type="email"
+          placeholder="Enter email"
+          control={form.control}
+        />
+
+        {/* Password */}
+        <RHFField
+          name="password"
+          label="Password"
+          type="password"
+          placeholder="Enter password"
           control={form.control}
         />
 
@@ -77,35 +99,6 @@ export default function ParentForm() {
           ]}
         />
 
-        {/* Enrolled Child */}
-        <RHFField
-          name="enrolledChildren"
-          label="Enrolled Child"
-          type="select"
-          control={form.control}
-          options={[
-            { label: "Student 1", value: "student1" },
-            { label: "Student 2", value: "student2" },
-          ]}
-        />
-
-        {/* Email */}
-        <RHFField
-          name="email"
-          label="Email"
-          type="email"
-          placeholder="Enter email"
-          control={form.control}
-        />
-
-        <RHFField
-          name="about"
-          label="About"
-          type="textarea"
-          placeholder="Enter something..."
-          control={form.control}
-        />
-
         {/* Phone */}
         <RHFField
           name="phone"
@@ -114,34 +107,41 @@ export default function ParentForm() {
           control={form.control}
         />
 
-        {/* Status */}
+        {/* Profile Picture */}
         <RHFField
-          name="status"
-          label="Status"
-          type="select"
+          name="profilePicture"
+          label="Profile Picture URL"
+          placeholder="Enter image URL"
           control={form.control}
-          options={[
-            { label: "Active", value: "Active" },
-            { label: "Inactive", value: "Inactive" },
-          ]}
+        />
+
+        {/* About */}
+        <RHFField
+          name="about"
+          label="About"
+          type="textarea"
+          placeholder="Enter something..."
+          control={form.control}
         />
 
         {/* Buttons */}
         <div className="col-span-3 flex gap-3 mt-4">
+
           <AppButton
-            ctaText="Add User"
+            ctaText={createParentMutation.isPending ? "Adding Parent..." : "Add Parent"}
             showIcon={false}
             className="bg-[#D33122] text-white px-5 py-2 rounded-lg"
           />
+
           <AppButton
             ctaText="Cancel"
             variant="outline"
             showIcon={false}
           />
+
         </div>
 
       </form>
     </div>
   )
 }
-

@@ -5,27 +5,57 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { studentSchema, StudentFormValues } from "@/components/schemas/student.schema"
 import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
+import { useMutation } from "@tanstack/react-query"
+import apiClient from "@/lib/network"
 
 export default function StudentForm() {
 
   const form = useForm<StudentFormValues>({
     resolver: zodResolver(studentSchema),
     defaultValues: {
-      userType: "Student",
-      status: "Active",
       grade: "Grade 5",
     },
   })
 
+  const createStudentMutation = useMutation({
+    mutationKey: ["createStudent"],
+
+    mutationFn: async (data: StudentFormValues) => {
+
+      const token = localStorage.getItem("token")
+
+      const response = await apiClient.post(
+        "/students",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
+    },
+
+    onSuccess(data) {
+      console.log("Student Created:", data)
+      form.reset()
+    },
+
+    onError(error: any) {
+      console.log("Create Student Error:", error.response?.data)
+    }
+  })
+
   const onSubmit = (data: StudentFormValues) => {
-    console.log("Student Data:", data)
+    createStudentMutation.mutate(data)
   }
 
   return (
     <div className="bg-[#F6F6F6] rounded-2xl p-6 w-full space-y-6 card-padding">
 
       <h2 className="text-lg font-semibold">
-        Create New User
+        Create New Student
       </h2>
 
       <form
@@ -33,21 +63,10 @@ export default function StudentForm() {
         className="grid grid-cols-3 gap-6"
       >
 
-        {/* User Type */}
+        {/* Student Name */}
         <RHFField
-          name="userType"
-          label="User Type"
-          type="select"
-          control={form.control}
-          options={[
-            { label: "Student", value: "Student" },
-          ]}
-        />
-
-        {/* Full Name */}
-        <RHFField
-          name="fullName"
-          label="Full Name"
+          name="name"
+          label="Student Name"
           placeholder="e.g., Alex Singh"
           control={form.control}
         />
@@ -61,20 +80,20 @@ export default function StudentForm() {
           control={form.control}
         />
 
+        {/* Password */}
+        <RHFField
+          name="password"
+          label="Password"
+          type="password"
+          placeholder="Enter password"
+          control={form.control}
+        />
+
         {/* Phone */}
         <RHFField
           name="phone"
           label="Phone Number"
           placeholder="e.g., 1234567890"
-          control={form.control}
-        />
-
-        {/* About */}
-        <RHFField
-          name="about"
-          label="About Me"
-          type="textarea"
-          placeholder="Enter something..."
           control={form.control}
         />
 
@@ -94,30 +113,38 @@ export default function StudentForm() {
           ]}
         />
 
-        {/* Status */}
+        {/* Profile Picture */}
         <RHFField
-          name="status"
-          label="Status"
-          type="select"
+          name="profilePicture"
+          label="Profile Picture URL"
+          placeholder="Enter image URL"
           control={form.control}
-          options={[
-            { label: "Active", value: "Active" },
-            { label: "Inactive", value: "Inactive" },
-          ]}
+        />
+
+        {/* About */}
+        <RHFField
+          name="about"
+          label="About"
+          type="textarea"
+          placeholder="Enter something..."
+          control={form.control}
         />
 
         {/* Buttons */}
         <div className="col-span-3 flex gap-3 mt-4">
+
           <AppButton
-            ctaText="Add User"
+            ctaText={createStudentMutation.isPending ? "Adding Student..." : "Add Student"}
             showIcon={false}
             className="bg-[#D33122] text-white px-5 py-2 rounded-lg"
           />
+
           <AppButton
             ctaText="Cancel"
             variant="outline"
             showIcon={false}
           />
+
         </div>
 
       </form>
