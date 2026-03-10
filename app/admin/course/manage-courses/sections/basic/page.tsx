@@ -2,6 +2,8 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+
 import {
   courseSchema,
   CourseFormValues,
@@ -10,6 +12,7 @@ import {
 import { RHFField } from "@/components/forms/RHFField"
 import FileUpload from "@/components/forms/Select"
 import AppButton from "@/components/global/Button"
+import apiClient from "@/lib/network"
 
 export default function CourseBasicForm() {
 
@@ -27,8 +30,53 @@ export default function CourseBasicForm() {
     },
   })
 
+  const createCourseMutation = useMutation({
+    mutationKey: ["createCourse"],
+
+    mutationFn: async (data: CourseFormValues) => {
+
+      const token = localStorage.getItem("token")
+
+      const payload = {
+        grade: data.grade,
+        name: data.courseName,
+        duration: data.duration,
+        image: "", 
+        sortDescription: data.description,
+        about: data.description,
+        overview: [],
+        isActive: data.status === "active",
+        price: data.coursePrice,
+        discount: data.discountedPrice,
+        expiryType: "LIFETIME",
+        numberOfMonths: Number(data.duration),
+      }
+
+      const response = await apiClient.post(
+        "/courses",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
+    },
+
+    onSuccess(data) {
+      console.log("Course Created:", data)
+      form.reset()
+    },
+
+    onError(error: any) {
+      console.log("Create Course Error:", error.response?.data)
+    }
+  })
+
   const onSubmit = (data: CourseFormValues) => {
-    console.log("Course Data:", data)
+    createCourseMutation.mutate(data)
   }
 
   return (
@@ -104,19 +152,14 @@ export default function CourseBasicForm() {
 
         </div>
 
-        {/* Subject Icon Upload */}
         <FileUpload
           label="Subject Icon"
           variant="small"
           description="Drag and drop image here"
           accept="image/png,image/jpeg,image/jpg"
           preview
-          // onChange={(file: File) =>
-          //   form.setValue("subjectIcon", file)
-          // }
         />
 
-        {/* Description */}
         <RHFField
           name="description"
           label="Short Description"
@@ -129,7 +172,11 @@ export default function CourseBasicForm() {
 
           <AppButton
             type="submit"
-            ctaText="Update"
+            ctaText={
+              createCourseMutation.isPending
+                ? "Creating..."
+                : "Update"
+            }
             showIcon={false}
             className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
           />

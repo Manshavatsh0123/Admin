@@ -21,7 +21,7 @@ export const courseSchema = z.object({
 
   description: z.string().min(5, "Short description is required"),
 
-  subjectIcon: z.instanceof(File).optional(),
+  subjectIcon: z.any().optional(),
 })
 
 export type CourseFormValues = z.infer<typeof courseSchema>

@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { notificationSchema, NotificationFormValues } from "@/components/schemas/notification.schema"
 import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
+import { useMutation } from "@tanstack/react-query"
+import apiClient from "@/lib/network"
 
 interface NotificationFormProps {
   onCancel?: () => void
@@ -20,8 +22,44 @@ export default function NotificationForm({ onCancel }: NotificationFormProps) {
     },
   })
 
+  const createNotificationMutation = useMutation({
+    mutationKey: ["createNotification"],
+
+    mutationFn: async (data: NotificationFormValues) => {
+
+      const token = localStorage.getItem("token")
+
+      const payload = {
+        title: data.title,
+        message: data.message,
+        receiver: data.sendTo
+      }
+
+      const response = await apiClient.post(
+        "/notifications",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
+    },
+
+    onSuccess(data) {
+      console.log("Notification Sent:", data)
+      form.reset()
+    },
+
+    onError(error: any) {
+      console.log("Notification Error:", error.response?.data)
+    }
+  })
+
   const onSubmit = (data: NotificationFormValues) => {
-    console.log("Notification Data:", data)
+    createNotificationMutation.mutate(data)
   }
 
   return (
@@ -50,7 +88,6 @@ export default function NotificationForm({ onCancel }: NotificationFormProps) {
           control={form.control}
         />
 
-        {/* Send To + Channel */}
         <div className="grid grid-cols-2 gap-5">
 
           <RHFField
@@ -80,12 +117,15 @@ export default function NotificationForm({ onCancel }: NotificationFormProps) {
 
         </div>
 
-        {/* Buttons */}
         <div className="flex items-center gap-4">
 
           <AppButton
             type="submit"
-            ctaText="Send Notification"
+            ctaText={
+              createNotificationMutation.isPending
+                ? "Sending..."
+                : "Send Notification"
+            }
             showIcon={false}
             className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
           />

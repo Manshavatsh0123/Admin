@@ -2,9 +2,11 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { tutorSchema, TutorFormValues } from "@/components/schemas/tutor.schema" 
+import { tutorSchema, TutorFormValues } from "@/components/schemas/tutor.schema"
 import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
+import { useMutation } from "@tanstack/react-query"
+import apiClient from "@/lib/network"
 
 interface CreateTutorFormProps {
   onCancel?: () => void
@@ -19,12 +21,55 @@ export default function CreateTutorForm({ onCancel }: CreateTutorFormProps) {
     },
   })
 
+  const createTutorMutation = useMutation({
+    mutationKey: ["createTutor"],
+
+    mutationFn: async (data: TutorFormValues) => {
+
+      const token = localStorage.getItem("token")
+
+      const payload = {
+        email: data.email,
+        name: `${data.firstName} ${data.lastName}`,
+        password: "tutor123",
+        phone: data.phone,
+        experienceYear: Number(data.experience),
+        profilePicture: "",
+        specialization: data.specialization,
+        grade: [data.grade],
+        about: data.about,
+        qualifications: [data.qualifications],
+      }
+
+      const response = await apiClient.post(
+        "/tutors",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
+    },
+
+    onSuccess(data) {
+      console.log("Tutor Created:", data)
+      form.reset()
+    },
+
+    onError(error: any) {
+      console.log("Create Tutor Error:", error.response?.data)
+    }
+  })
+
   const onSubmit = (data: TutorFormValues) => {
-    console.log("Tutor Data:", data)
+    createTutorMutation.mutate(data)
   }
 
   return (
-    <div className="bg-[#F6F6F6] rounded-2xl p-6 w-full space-y-8">
+    <div className="px-6 w-full space-y-8">
 
       <h2 className="text-lg font-semibold">
         Create New Tutor
@@ -32,6 +77,7 @@ export default function CreateTutorForm({ onCancel }: CreateTutorFormProps) {
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
+        {/* Personal Information */}
         <div className="border rounded-xl p-6 space-y-6">
           <h3 className="font-semibold">Personal Information</h3>
 
@@ -88,7 +134,7 @@ export default function CreateTutorForm({ onCancel }: CreateTutorFormProps) {
           </div>
         </div>
 
-
+        {/* Professional Information */}
         <div className="border rounded-xl p-6 space-y-6">
           <h3 className="font-semibold">Professional Information</h3>
 
@@ -159,20 +205,16 @@ export default function CreateTutorForm({ onCancel }: CreateTutorFormProps) {
           </div>
         </div>
 
-      
+        {/* Buttons */}
         <div className="flex gap-3">
 
-          {/* Submit */}
           <AppButton
-
-            ctaText="Create Tutor"
+            ctaText={createTutorMutation.isPending ? "Creating..." : "Create Tutor"}
             showIcon={false}
             className="bg-[#D33122] text-white px-5 py-2 rounded-lg"
           />
 
-          {/*  Cancel */}
           <AppButton
-
             onClick={onCancel}
             ctaText="Cancel"
             variant="outline"

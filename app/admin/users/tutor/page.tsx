@@ -14,10 +14,7 @@ export default function TutorPage() {
 
   return (
     <>
-      <UsersHeader
-        role="tutor"
-        onAdd={() => router.push("/admin/users/tutor/new")}
-      />
+      <UsersHeader role="tutor" onAdd={() => router.push("/admin/users/tutor/new")} />
       <UsersStats role="tutor" />
       <UsersFilters role="tutor" onSearch={setSearch} />
       <TutorTable />
