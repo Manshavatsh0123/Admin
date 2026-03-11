@@ -8,7 +8,6 @@ import BadgesSection from "./components/BadgesSection"
 import RewardsSection from "./components/RewardsSection"
 import { ChartLineStudent } from "./components/ChartLineStudent"
 import { FireExtinguisher, Medal, Star, Trophy } from "lucide-react"
-import BadgeForm from "./components/BadgeForm"
 
 export default function Page() {
 
@@ -26,10 +25,7 @@ export default function Page() {
             <PageInfoBar
                 title="Badges & Rewards"
                 description="View student performance, manage badges and rewards"
-                actionButtonLabel="Create Badge"
             />
-
-            <BadgeForm />
 
             <BadgesSection
                 badges={[
@@ -63,13 +59,7 @@ export default function Page() {
                         description: "Earned highest score in a subject",
                         image: "/images/stars-ribbon.png",
                         locked: true,
-                    },
-                    {
-                        name: "Outstanding",
-                        description: "Earned highest score in a subject",
-                        image: "/images/Frame.png",
-                        locked: true,
-                    },
+                    }
                 ]}
             />
 

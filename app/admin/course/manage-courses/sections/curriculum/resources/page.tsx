@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 
 import {
@@ -13,17 +14,16 @@ import {
 import { RHFField } from "@/components/forms/RHFField"
 import FileUpload from "@/components/forms/Select"
 import AppButton from "@/components/global/Button"
+import apiClient from "@/lib/network"
 
 type Resource = {
-  id: number
+  id: string
   title: string
 }
 
 export default function Resources() {
 
-  const [resources, setResources] = useState<Resource[]>([
-    { id: 1, title: "Algebra PDF" }
-  ])
+  const [resources, setResources] = useState<Resource[]>([])
 
   const form = useForm<ResourceFormValues>({
     resolver: zodResolver(resourceSchema),
@@ -33,16 +33,89 @@ export default function Resources() {
     }
   })
 
-  const onSubmit = (data: ResourceFormValues) => {
+  /* ---------------- GET CHAPTERS ---------------- */
 
-    const newResource: Resource = {
-      id: Date.now(),
-      title: data.title
+  const { data: chaptersData } = useQuery({
+
+    queryKey: ["chapters"],
+
+    queryFn: async () => {
+
+      const token = localStorage.getItem("token")
+      const courseId = localStorage.getItem("courseId")
+
+      const response = await apiClient.get(
+        `/courses/${courseId}/chapters`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
     }
 
-    setResources(prev => [...prev, newResource])
+  })
 
-    form.reset()
+  const chapterOptions =
+    chaptersData?.map((chapter: any) => ({
+      label: chapter.name,
+      value: chapter.id
+    })) || []
+
+  /* ---------------- CREATE RESOURCE ---------------- */
+
+  const createResourceMutation = useMutation({
+
+    mutationKey: ["createResource"],
+
+    mutationFn: async (data: ResourceFormValues) => {
+
+      const token = localStorage.getItem("token")
+      const courseId = localStorage.getItem("courseId")
+
+      const payload = {
+        title: data.title
+      }
+
+      console.log("COURSE:", courseId)
+      console.log("CHAPTER:", data.chapter)
+      console.log("PAYLOAD:", payload)
+
+      const response = await apiClient.post(
+        `/courses/${courseId}/chapters/${data.chapter}/resources`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
+    },
+
+    onSuccess(data) {
+
+      const newResource: Resource = {
+        id: data.id,
+        title: data.title
+      }
+
+      setResources(prev => [...prev, newResource])
+
+      form.reset()
+    },
+
+    onError(error: any) {
+      console.log("RESOURCE ERROR:", error?.response?.data)
+    }
+
+  })
+
+  const onSubmit = (data: ResourceFormValues) => {
+    createResourceMutation.mutate(data)
   }
 
   return (
@@ -74,10 +147,7 @@ export default function Resources() {
             label="Chapter"
             type="select"
             control={form.control}
-            options={[
-              { label: "Algebra", value: "algebra" },
-              { label: "Linear Equations", value: "linear" }
-            ]}
+            options={chapterOptions}
           />
 
         </div>
@@ -89,16 +159,17 @@ export default function Resources() {
           description="Upload Resources Files"
           accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.png"
           preview
-        // onChange={(file: File) =>
-        //   form.setValue("file", file)
-        // }
         />
 
         <div className="flex gap-3">
 
           <AppButton
             type="submit"
-            ctaText="Add Resource"
+            ctaText={
+              createResourceMutation.isPending
+                ? "Adding..."
+                : "Add Resource"
+            }
             showIcon={false}
             className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
           />

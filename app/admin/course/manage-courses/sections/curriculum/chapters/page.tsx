@@ -1,9 +1,10 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Pencil, Trash2, Plus } from "lucide-react"
+import { useMutation } from "@tanstack/react-query"
+import { Pencil, Trash2 } from "lucide-react"
 
 import {
   chapterSchema,
@@ -12,22 +13,23 @@ import {
 
 import { RHFField } from "@/components/forms/RHFField"
 import AppButton from "@/components/global/Button"
+import apiClient from "@/lib/network"
 
 type Chapter = {
-  id: number
+  id: string
   chapterName: string
   duration: string
 }
 
-const ChaptersPage = () => {
+export default function ChaptersPage() {
 
-  const [chapters, setChapters] = useState<Chapter[]>([
-    {
-      id: 1,
-      chapterName: "Linear Equations & Systems",
-      duration: "1-2 hours",
-    },
-  ])
+  const [chapters, setChapters] = useState<Chapter[]>([])
+  const [courseId, setCourseId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const id = localStorage.getItem("courseId")
+    setCourseId(id)
+  }, [])
 
   const form = useForm<ChapterFormValues>({
     resolver: zodResolver(chapterSchema),
@@ -37,29 +39,76 @@ const ChaptersPage = () => {
     },
   })
 
-  const onSubmit = (data: ChapterFormValues) => {
+  const createChapterMutation = useMutation({
 
-    const newChapter: Chapter = {
-      id: Date.now(),
-      ...data,
+    mutationKey: ["createChapter"],
+
+    mutationFn: async (data: ChapterFormValues) => {
+
+      const token = localStorage.getItem("token")
+
+      if (!courseId) {
+        throw new Error("Course ID not found. Please create a course first.")
+      }
+
+      const payload = {
+        name: data.chapterName,
+        duration: data.duration
+      }
+
+      console.log("COURSE ID:", courseId)
+      console.log("PAYLOAD:", payload)
+
+      const response = await apiClient.post(
+        `/courses/${courseId}/chapters`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      )
+
+      return response.data
+    },
+
+    onSuccess(data) {
+
+      console.log("Chapter Created:", data)
+
+      const newChapter: Chapter = {
+        id: data.id,
+        chapterName: data.name,
+        duration: data.duration,
+      }
+
+      setChapters(prev => [...prev, newChapter])
+
+      form.reset()
+    },
+
+    onError(error: any) {
+
+      console.log("FULL ERROR:", error)
+
+      if (error?.response) {
+        console.log("STATUS:", error.response.status)
+        console.log("BACKEND MESSAGE:", error.response.data)
+      } else {
+        console.log("UNKNOWN ERROR:", error.message)
+      }
+
     }
 
-    setChapters((prev) => [...prev, newChapter])
+  })
 
-    form.reset()
+  const onSubmit = (data: ChapterFormValues) => {
+    createChapterMutation.mutate(data)
   }
 
   return (
     <div className="px-8">
 
-      {/* New Chapter Button */}
-      <AppButton
-        type="submit"
-        ctaText="New Chapter"
-        className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
-      />
-
-      {/* Form */}
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="mt-6 space-y-6"
@@ -77,16 +126,21 @@ const ChaptersPage = () => {
           <RHFField
             name="duration"
             label="Duration"
-            placeholder="1-2 hours"
+            placeholder="5"
             control={form.control}
           />
 
         </div>
 
         <div className="flex items-center gap-3">
+
           <AppButton
             type="submit"
-            ctaText="Update"
+            ctaText={
+              createChapterMutation.isPending
+                ? "Creating..."
+                : "Add Chapter"
+            }
             showIcon={false}
             className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
           />
@@ -97,12 +151,15 @@ const ChaptersPage = () => {
             variant="outline"
             showIcon={false}
             className="px-5 py-2 rounded-lg text-[14px]"
+            onClick={() => form.reset()}
           />
+
         </div>
 
       </form>
 
       {/* Chapters List */}
+
       <div className="mt-8 space-y-3">
 
         {chapters.map((chapter) => (
@@ -139,5 +196,3 @@ const ChaptersPage = () => {
     </div>
   )
 }
-
-export default ChaptersPage

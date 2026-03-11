@@ -3,12 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-
-import {
-  courseSchema,
-  CourseFormValues,
-} from "@/components/schemas/course.schema"
-
+import { courseSchema, CourseFormValues } from "@/components/schemas/course.schema"
 import { RHFField } from "@/components/forms/RHFField"
 import FileUpload from "@/components/forms/Select"
 import AppButton from "@/components/global/Button"
@@ -41,7 +36,7 @@ export default function CourseBasicForm() {
         grade: data.grade,
         name: data.courseName,
         duration: data.duration,
-        image: "", 
+        image: "",
         sortDescription: data.description,
         about: data.description,
         overview: [],
@@ -49,29 +44,26 @@ export default function CourseBasicForm() {
         price: data.coursePrice,
         discount: data.discountedPrice,
         expiryType: "LIFETIME",
-        numberOfMonths: Number(data.duration),
+        numberOfMonths: Math.ceil(Number(data.duration) / 4),
       }
 
-      const response = await apiClient.post(
-        "/courses",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      const response = await apiClient.post("/courses", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      )
+      })
 
       return response.data
     },
 
     onSuccess(data) {
       console.log("Course Created:", data)
-      form.reset()
-    },
 
-    onError(error: any) {
-      console.log("Create Course Error:", error.response?.data)
+      const courseId = data.course.id
+
+      localStorage.setItem("courseId", courseId)
+
+      form.reset()
     }
   })
 

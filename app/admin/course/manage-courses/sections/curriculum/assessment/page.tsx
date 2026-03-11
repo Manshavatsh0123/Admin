@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 
 import {
@@ -13,9 +14,10 @@ import {
 import { RHFField } from "@/components/forms/RHFField"
 import FileUpload from "@/components/forms/Select"
 import AppButton from "@/components/global/Button"
+import apiClient from "@/lib/network"
 
 type Assessment = {
-  id: number
+  id: string
   title: string
   questions: number
   passingScore: number
@@ -24,13 +26,7 @@ type Assessment = {
 
 export default function AssessmentPage() {
 
-  const [assessments, setAssessments] = useState<Assessment[]>([
-    { id: 1, title: "Algebra Exam", questions: 50, passingScore: 70, duration: "60 min" },
-    { id: 2, title: "Linear Equations Exam", questions: 100, passingScore: 70, duration: "60 min" },
-    { id: 3, title: "Trigonometry Exam", questions: 70, passingScore: 50, duration: "120 min" },
-    { id: 4, title: "Calculus Exam", questions: 50, passingScore: 50, duration: "60 min" },
-    { id: 5, title: "Integration Exam", questions: 150, passingScore: 60, duration: "60 min" }
-  ])
+  const [assessments, setAssessments] = useState<Assessment[]>([])
 
   const form = useForm({
     resolver: zodResolver(assessmentSchema),
@@ -45,19 +41,93 @@ export default function AssessmentPage() {
     }
   })
 
-  const onSubmit = (data: AssessmentFormValues) => {
+  const { data: chaptersData } = useQuery({
 
-    const newAssessment: Assessment = {
-      id: Date.now(),
-      title: data.title,
-      questions: data.options,
-      passingScore: data.passingScore,
-      duration: data.duration
+    queryKey: ["chapters"],
+
+    queryFn: async () => {
+
+      const token = localStorage.getItem("token")
+      const courseId = localStorage.getItem("courseId")
+
+      const response = await apiClient.get(
+        `/courses/${courseId}/chapters`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
     }
 
-    setAssessments(prev => [...prev, newAssessment])
+  })
 
-    form.reset()
+  const chapterOptions =
+    chaptersData?.map((chapter: any) => ({
+      label: chapter.name,
+      value: chapter.id
+    })) || []
+
+  const createAssessmentMutation = useMutation({
+
+    mutationKey: ["createAssessment"],
+
+    mutationFn: async (data: AssessmentFormValues) => {
+
+      const token = localStorage.getItem("token")
+      const courseId = localStorage.getItem("courseId")
+
+      const payload = {
+        title: data.title,
+        numberOfQuestions: Number(data.options),
+        passingScore: Number(data.passingScore),
+        duration: data.duration,
+        description: data.description,
+        instructions: data.instructions
+      }
+
+      console.log("COURSE:", courseId)
+      console.log("CHAPTER:", data.course)
+      console.log("PAYLOAD:", payload)
+
+      const response = await apiClient.post(
+        `/courses/${courseId}/chapters/${data.course}/assessments`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
+    },
+
+    onSuccess(data) {
+
+      const newAssessment: Assessment = {
+        id: data.id,
+        title: data.title,
+        questions: data.numberOfQuestions,
+        passingScore: data.passingScore,
+        duration: data.duration
+      }
+
+      setAssessments(prev => [...prev, newAssessment])
+
+      form.reset()
+    },
+
+    onError(error: any) {
+      console.log("ASSESSMENT ERROR:", error?.response?.data)
+    }
+
+  })
+
+  const onSubmit = (data: AssessmentFormValues) => {
+    createAssessmentMutation.mutate(data)
   }
 
   return (
@@ -86,23 +156,21 @@ export default function AssessmentPage() {
 
           <RHFField
             name="course"
-            label="Course"
+            label="Chapter"
             type="select"
             control={form.control}
-            options={[
-              { label: "Mathematics", value: "math" },
-              { label: "Physics", value: "physics" }
-            ]}
+            options={chapterOptions}
           />
 
           <RHFField
             name="options"
-            label="Options"
+            label="Number of Questions"
             type="select"
             control={form.control}
             options={[
-              { label: "4", value: "4" },
-              { label: "5", value: "5" }
+              { label: "10", value: "10" },
+              { label: "50", value: "50" },
+              { label: "100", value: "100" }
             ]}
           />
 
@@ -145,16 +213,17 @@ export default function AssessmentPage() {
           description="Upload Assessment Files"
           accept=".csv,.xls,.xlsx"
           preview
-          // onChange={(file: File) =>
-          //   form.setValue("questionBank", file)
-          // }
         />
 
         <div className="flex gap-3">
 
           <AppButton
             type="submit"
-            ctaText="Create Assessment"
+            ctaText={
+              createAssessmentMutation.isPending
+                ? "Creating..."
+                : "Create Assessment"
+            }
             showIcon={false}
             className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
           />

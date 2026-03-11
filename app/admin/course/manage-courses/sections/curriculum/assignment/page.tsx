@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { Pencil, Trash2, Plus } from "lucide-react"
 
 import {
@@ -13,24 +14,19 @@ import {
 import { RHFField } from "@/components/forms/RHFField"
 import FileUpload from "@/components/forms/Select"
 import AppButton from "@/components/global/Button"
+import apiClient from "@/lib/network"
 
 type Assignment = {
-  id: number
+  id: string
   title: string
   questions: number
   passingScore: number
-  duration: string
+  duration: number
 }
 
 export default function AssignmentPage() {
 
-  const [assignments, setAssignments] = useState<Assignment[]>([
-    { id: 1, title: "Algebra Exam", questions: 10, passingScore: 30, duration: "30 min" },
-    { id: 2, title: "Linear Equations Exam", questions: 5, passingScore: 20, duration: "20 min" },
-    { id: 3, title: "Trigonometry Exam", questions: 10, passingScore: 30, duration: "30 min" },
-    { id: 4, title: "Calculus Exam", questions: 5, passingScore: 20, duration: "30 min" },
-    { id: 5, title: "Integration Exam", questions: 10, passingScore: 30, duration: "30 min" }
-  ])
+  const [assignments, setAssignments] = useState<Assignment[]>([])
 
   const form = useForm({
     resolver: zodResolver(assignmentSchema),
@@ -45,31 +41,119 @@ export default function AssignmentPage() {
     }
   })
 
-  const onSubmit = (data: AssignmentFormValues) => {
+  /* ---------------- GET CHAPTERS ---------------- */
 
-    const newAssignment: Assignment = {
-      id: Date.now(),
-      title: data.title,
-      questions: data.options,
-      passingScore: data.passingScore,
-      duration: data.duration
+  const { data: chaptersData } = useQuery({
+
+    queryKey: ["chapters"],
+
+    queryFn: async () => {
+
+      const token = localStorage.getItem("token")
+      const courseId = localStorage.getItem("courseId")
+
+      if (!courseId) throw new Error("Course ID missing")
+
+      const response = await apiClient.get(
+        `/courses/${courseId}/chapters`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
     }
 
-    setAssignments(prev => [...prev, newAssignment])
+  })
 
-    form.reset()
+  const chapterOptions =
+    chaptersData?.map((chapter: any) => ({
+      label: chapter.name,
+      value: chapter.id
+    })) || []
+
+  /* ---------------- CREATE ASSIGNMENT ---------------- */
+
+  const createAssignmentMutation = useMutation({
+
+    mutationKey: ["createAssignment"],
+
+    mutationFn: async (data: AssignmentFormValues) => {
+
+      const token = localStorage.getItem("token")
+      const courseId = localStorage.getItem("courseId")
+
+      if (!courseId) throw new Error("Course ID missing")
+
+      const payload = {
+        title: data.title,
+        numberOfQuestions: Number(data.options),
+        passingScore: Number(data.passingScore),
+        duration: Number(data.duration),
+        description: data.description,
+        instructions: data.instructions
+      }
+
+      console.log("COURSE:", courseId)
+      console.log("CHAPTER:", data.course)
+      console.log("PAYLOAD:", payload)
+
+      const response = await apiClient.post(
+        `/courses/${courseId}/chapters/${data.course}/assignments`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      return response.data
+    },
+
+    onSuccess(data) {
+
+      console.log("ASSIGNMENT CREATED:", data)
+
+      const newAssignment: Assignment = {
+        id: data.id,
+        title: data.title,
+        questions: data.numberOfQuestions,
+        passingScore: data.passingScore,
+        duration: data.duration
+      }
+
+      setAssignments(prev => [...prev, newAssignment])
+
+      form.reset()
+    },
+
+    onError(error: any) {
+
+      console.log("ASSIGNMENT ERROR:", error)
+
+      console.log(
+        "BACKEND ERROR:",
+        error?.response?.data
+      )
+    }
+
+  })
+
+  const onSubmit = (data: AssignmentFormValues) => {
+    createAssignmentMutation.mutate(data)
   }
 
   return (
     <div className="px-8">
 
-      {/* Header */}
       <button className="flex items-center gap-2 bg-[#D33122] text-white px-5 py-2 rounded-lg text-[14px] font-medium">
         <Plus size={16} />
         New Assignment
       </button>
 
-      {/* Form */}
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="mt-6 space-y-6"
@@ -86,30 +170,28 @@ export default function AssignmentPage() {
 
           <RHFField
             name="course"
-            label="Course"
+            label="Chapter"
             type="select"
             control={form.control}
-            options={[
-              { label: "Mathematics", value: "math" },
-              { label: "Physics", value: "physics" }
-            ]}
+            options={chapterOptions}
           />
 
           <RHFField
             name="options"
-            label="Options"
+            label="Number of Questions"
             type="select"
             control={form.control}
             options={[
               { label: "4", value: "4" },
-              { label: "5", value: "5" }
+              { label: "5", value: "5" },
+              { label: "10", value: "10" }
             ]}
           />
 
           <RHFField
             name="duration"
-            label="Duration"
-            placeholder="30 min"
+            label="Duration (minutes)"
+            placeholder="30"
             control={form.control}
           />
 
@@ -138,23 +220,23 @@ export default function AssignmentPage() {
           control={form.control}
         />
 
-        {/* Upload */}
         <FileUpload
           label="Upload Question Bank"
           variant="large"
           description="Upload Assignment Files"
           accept=".csv,.xls,.xlsx"
           preview
-        // onChange={(file: File) =>
-        //   form.setValue("questionBank", file)
-        // }
         />
 
         <div className="flex gap-3">
 
           <AppButton
             type="submit"
-            ctaText="Create Assignment"
+            ctaText={
+              createAssignmentMutation.isPending
+                ? "Creating..."
+                : "Create Assignment"
+            }
             showIcon={false}
             className="bg-[#D33122] hover:bg-[#B92B1D] text-white px-5 py-2 rounded-lg text-[14px] font-medium"
           />
@@ -171,7 +253,8 @@ export default function AssignmentPage() {
 
       </form>
 
-      {/* Table */}
+      {/* Assignment Table */}
+
       <div className="mt-10 bg-white rounded-xl overflow-hidden border">
 
         <table className="w-full text-sm">
@@ -193,7 +276,7 @@ export default function AssignmentPage() {
                 <td className="p-3">{a.title}</td>
                 <td className="p-3">{a.questions}</td>
                 <td className="p-3">{a.passingScore}%</td>
-                <td className="p-3">{a.duration}</td>
+                <td className="p-3">{a.duration} min</td>
 
                 <td className="p-3 flex justify-end gap-3">
                   <Pencil size={16} className="cursor-pointer" />
