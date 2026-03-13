@@ -1,64 +1,59 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
 import { DataTable, ColumnDef } from "@/components/DataForm/DataTable"
 import { Pencil, Trash2 } from "lucide-react"
+import apiClient from "@/lib/network"
 
 type Student = {
   name: string
   email: string
-  grade: number
+  grade: string
   phone: string
   status: "active" | "inactive"
 }
 
-const mockStudents: Student[] = [
-  {
-    name: "Alex Singh",
-    email: "alex.singh@example.com",
-    grade: 5,
-    phone: "1234567890",
-    status: "active",
-  },
-  {
-    name: "Emma Patel",
-    email: "emma.patel@example.com",
-    grade: 5,
-    phone: "9876543210",
-    status: "active",
-  },
-  {
-    name: "Arjun Kumar",
-    email: "arjun.kumar@example.com",
-    grade: 6,
-    phone: "9123456789",
-    status: "active",
-  },
-  {
-    name: "Riya Sharma",
-    email: "riya.sharma@example.com",
-    grade: 6,
-    phone: "9988776655",
-    status: "active",
-  },
-  {
-    name: "Kabir Mehta",
-    email: "kabir.mehta@example.com",
-    grade: 7,
-    phone: "9090909090",
-    status: "active",
-  },
-  {
-    name: "Sara Khan",
-    email: "sara.khan@example.com",
-    grade: 7,
-    phone: "9345678123",
-    status: "inactive",
-  },
-]
-
 export default function StudentTable() {
 
+  const { data, isLoading } = useQuery({
+
+    queryKey: ["students"],
+
+    queryFn: async () => {
+
+      const token = localStorage.getItem("token")
+
+      const response = await apiClient.get("/students", {
+        params: {
+          page: 1,
+          perPage: 10,
+          search: "",
+          grade: "",
+          isActive: ""
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      console.log("STUDENTS API:", response.data)
+
+      return response.data
+    }
+
+  })
+
+  const students: Student[] =
+    data?.items?.map((student: any) => ({
+      name: student.name,
+      email: student.email,
+      grade: student.grade,
+      phone: student.phone,
+      status: student.isActive ? "active" : "inactive"
+    })) || []
+
   const columns: ColumnDef<Student>[] = [
+
     {
       id: "name",
       header: "Name",
@@ -116,10 +111,12 @@ export default function StudentTable() {
     },
   ]
 
+  if (isLoading) return <p className="p-4">Loading...</p>
+
   return (
     <DataTable<Student>
       columns={columns}
-      data={mockStudents}
+      data={students}
     />
   )
 }

@@ -1,77 +1,99 @@
 "use client"
 
-import { useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import PageInfoBar from "@/components/global/PageInfoBar"
 import CouponCard from "./components/CouponCard"
 import CouponForm from "./components/CouponForm"
-
+import apiClient from "@/lib/network"
 
 type Coupon = {
-    id: number
-    code: string
-    discount: string
-    expires: string
-    status: "active" | "inactive"
+  id: string
+  code: string
+  discount: string
+  expires: string
+  status: "active" | "inactive"
 }
 
-const initialCoupons: Coupon[] = [
-    {
-        id: 1,
-        code: "SAVE50",
-        discount: "50 % off",
-        expires: "2026-03-31",
-        status: "active",
-    },
-    {
-        id: 2,
-        code: "WELCOME20",
-        discount: "20 % off",
-        expires: "2026-05-15",
-        status: "active",
-    },
-    {
-        id: 3,
-        code: "SPRING10",
-        discount: "10 % off",
-        expires: "2026-04-10",
-        status: "inactive",
-    },
-]
-function page() {
-    const [coupons, setCoupons] = useState<Coupon[]>(initialCoupons)
+export default function Page() {
 
-    const handleDelete = (id: number) => {
-        setCoupons(prev => prev.filter(c => c.id !== id))
+  const formatDate = (date: string) => {
+    if (!date) return "N/A"
+
+    return new Date(date).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    })
+  }
+
+  const { data, isLoading } = useQuery({
+
+    queryKey: ["coupons"],
+
+    queryFn: async () => {
+
+      const token = localStorage.getItem("token")
+
+      const response = await apiClient.get("/coupons", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      console.log("COUPONS API:", response.data)
+
+      return response.data
     }
 
-    return (
-        <>
-            <PageInfoBar
-                title="Coupon Management"
-                description="Create and manage promotional coupons"
-                actionButtonLabel="Create Coupon"
-            />
+  })
 
-            {/* Create Coupon Form */}
-            <CouponForm />
+  const coupons: Coupon[] =
+    data?.items?.map((coupon: any) => ({
+      id: coupon.id,
+      code: coupon.code,
+      discount: `${coupon.discount}% off`,
+      expires: formatDate(coupon.expiryDate),
+      status: coupon.isActive ? "active" : "inactive"
+    })) || []
 
-            {/* Coupon Cards */}
-            <div className="grid grid-cols-3 gap-6 mt-10">
-                {coupons.map((coupon) => (
-                    <CouponCard
-                        key={coupon.id}
-                        code={coupon.code}
-                        discount={coupon.discount}
-                        expires={coupon.expires}
-                        status={coupon.status}
-                        onCopy={() => navigator.clipboard.writeText(coupon.code)}
-                        onEdit={() => console.log("Edit", coupon.id)}
-                        onDelete={() => handleDelete(coupon.id)}
-                    />
-                ))}
-            </div>
-        </>
-    );
+  const handleDelete = (id: string) => {
+    console.log("Delete coupon:", id)
+  }
+
+  if (isLoading) {
+    return <p className="p-6">Loading coupons...</p>
+  }
+
+  return (
+    <>
+      <PageInfoBar
+        title="Coupon Management"
+        description="Create and manage promotional coupons"
+        actionButtonLabel="Create Coupon"
+      />
+
+      <CouponForm />
+
+      {/* Coupon Cards */}
+
+      <div className="grid grid-cols-3 gap-6 mt-10">
+
+        {coupons.map((coupon) => (
+
+          <CouponCard
+            key={coupon.id}
+            code={coupon.code}
+            discount={coupon.discount}
+            expires={coupon.expires}
+            status={coupon.status}
+            onCopy={() => navigator.clipboard.writeText(coupon.code)}
+            onEdit={() => console.log("Edit", coupon.id)}
+            onDelete={() => handleDelete(coupon.id)}
+          />
+
+        ))}
+
+      </div>
+    </>
+  )
 }
-
-export default page; 

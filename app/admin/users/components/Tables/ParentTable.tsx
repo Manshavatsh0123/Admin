@@ -1,7 +1,9 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
 import { DataTable, ColumnDef } from "@/components/DataForm/DataTable"
 import { Pencil, Trash2 } from "lucide-react"
+import apiClient from "@/lib/network"
 
 type Parent = {
   name: string
@@ -12,51 +14,48 @@ type Parent = {
   status: "active" | "inactive"
 }
 
-const mockParents: Parent[] = [
-  {
-    name: "Rahul Singh",
-    email: "rahul.singh@example.com",
-    relationship: "Father",
-    children: 2,
-    phone: "9876543210",
-    status: "active",
-  },
-  {
-    name: "Anita Sharma",
-    email: "anita.sharma@example.com",
-    relationship: "Mother",
-    children: 1,
-    phone: "9123456780",
-    status: "inactive",
-  },
-  {
-    name: "Vikram Patel",
-    email: "vikram.patel@example.com",
-    relationship: "Guardian",
-    children: 3,
-    phone: "9988776655",
-    status: "active",
-  },
-  {
-    name: "Meera Nair",
-    email: "meera.nair@example.com",
-    relationship: "Mother",
-    children: 2,
-    phone: "9090909090",
-    status: "active",
-  },
-  {
-    name: "Arjun Verma",
-    email: "arjun.verma@example.com",
-    relationship: "Father",
-    children: 1,
-    phone: "9345678123",
-    status: "inactive",
-  },
-]
-
 export default function ParentTable() {
+
+
+  const { data, isLoading } = useQuery({
+
+    queryKey: ["parents"],
+
+    queryFn: async () => {
+
+      const token = localStorage.getItem("token")
+
+      const response = await apiClient.get("/parents", {
+        params: {
+          page: 1,
+          perPage: 10,
+          search: "",
+          isActive: ""
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      console.log("PARENTS API:", response.data)
+
+      return response.data
+    }
+
+  })
+
+  const parents: Parent[] =
+    data?.items?.map((parent: any) => ({
+      name: parent.name,
+      email: parent.email,
+      relationship: parent.relationship || "Guardian",
+      children: parent.childrenCount || 0,
+      phone: parent.phone,
+      status: parent.isActive ? "active" : "inactive"
+    })) || []
+
   const columns: ColumnDef<Parent>[] = [
+
     { id: "name", header: "Name", accessorKey: "name" },
 
     {
@@ -68,11 +67,23 @@ export default function ParentTable() {
       ),
     },
 
-    { id: "relationship", header: "Relationship", accessorKey: "relationship" },
+    {
+      id: "relationship",
+      header: "Relationship",
+      accessorKey: "relationship"
+    },
 
-    { id: "children", header: "Enrolled Childs", accessorKey: "children" },
+    {
+      id: "children",
+      header: "Enrolled Childs",
+      accessorKey: "children"
+    },
 
-    { id: "phone", header: "Phone Number", accessorKey: "phone" },
+    {
+      id: "phone",
+      header: "Phone Number",
+      accessorKey: "phone"
+    },
 
     {
       id: "status",
@@ -80,10 +91,11 @@ export default function ParentTable() {
       accessorKey: "status",
       cell: (value) => (
         <span
-          className={`px-3 py-1 rounded-full text-xs font-medium ${value === "active"
-            ? "bg-green-100 text-green-700"
-            : "bg-red-100 text-red-600"
-            }`}
+          className={`px-3 py-1 rounded-full text-xs font-medium ${
+            value === "active"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-600"
+          }`}
         >
           {value === "active" ? "Active" : "Inactive"}
         </span>
@@ -103,8 +115,14 @@ export default function ParentTable() {
     },
   ]
 
-  return <DataTable<Parent>
-    columns={columns}
-    data={mockParents}
-  />
+  if (isLoading) {
+    return <p className="p-4">Loading parents...</p>
+  }
+
+  return (
+    <DataTable<Parent>
+      columns={columns}
+      data={parents}
+    />
+  )
 }

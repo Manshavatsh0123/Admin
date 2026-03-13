@@ -1,7 +1,9 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
 import { DataTable, ColumnDef } from "@/components/DataForm/DataTable"
 import { Pencil, Trash2 } from "lucide-react"
+import apiClient from "@/lib/network"
 
 type Tutor = {
   name: string
@@ -13,57 +15,64 @@ type Tutor = {
   status: "active" | "inactive"
 }
 
-const mockTutors: Tutor[] = [
-  {
-    name: "Dr. Priya Sharma",
-    email: "priya.sharma@example.com",
-    specialization: "Mathematics",
-    courses: 3,
-    students: 125,
-    experience: "8 yrs",
-    status: "active",
-  },
-  {
-    name: "Arpita Singh",
-    email: "arpita.singh@example.com",
-    specialization: "English",
-    courses: 2,
-    students: 98,
-    experience: "6 yrs",
-    status: "active",
-  },
-  {
-    name: "Dr. Rajesh Kumar",
-    email: "rajesh.kumar@example.com",
-    specialization: "Mathematics",
-    courses: 4,
-    students: 156,
-    experience: "10 yrs",
-    status: "active",
-  },
-  {
-    name: "Vikram Gupta",
-    email: "vikram.gupta@example.com",
-    specialization: "Mathematics",
-    courses: 2,
-    students: 87,
-    experience: "5 yrs",
-    status: "active",
-  },
-  {
-    name: "Sneha Patel",
-    email: "sneha.patel@example.com",
-    specialization: "Mathematics",
-    courses: 3,
-    students: 112,
-    experience: "7 yrs",
-    status: "inactive",
-  },
-]
-
 export default function TutorTable() {
 
+  /* ---------------- FETCH TUTORS ---------------- */
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["tutors"],
+
+    queryFn: async () => {
+
+      const token = localStorage.getItem("token")
+
+      const response = await apiClient.get("/tutors", {
+        params: {
+          page: 1,
+          perPage: 10,
+          search: "",
+          isActive: ""
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      console.log("TUTORS API:", response.data)
+
+      return response.data
+    }
+  })
+
+  /* ---------------- CALCULATE EXPERIENCE ---------------- */
+
+  const getExperience = (createdAt: string) => {
+
+    if (!createdAt) return "N/A"
+
+    const startYear = new Date(createdAt).getFullYear()
+    const currentYear = new Date().getFullYear()
+
+    return `${currentYear - startYear} yrs`
+  }
+
+  /* ---------------- MAP API DATA ---------------- */
+
+  const tutors: Tutor[] =
+    data?.items?.map((tutor: any) => ({
+      name: tutor.name,
+      email: tutor.email,
+      specialization: tutor.specialization || "General",
+      courses: tutor.coursesCount || 0,
+      students: tutor.studentsCount || 0,
+      experience: getExperience(tutor.createdAt),
+      status: tutor.isActive ? "active" : "inactive"
+    })) || []
+
+  /* ---------------- TABLE COLUMNS ---------------- */
+
   const columns: ColumnDef<Tutor>[] = [
+
     {
       id: "name",
       header: "Tutor Name",
@@ -75,26 +84,31 @@ export default function TutorTable() {
         </div>
       ),
     },
+
     {
       id: "specialization",
       header: "Specialization",
       accessorKey: "specialization",
     },
+
     {
       id: "courses",
       header: "Courses",
       accessorKey: "courses",
     },
+
     {
       id: "students",
       header: "Students",
       accessorKey: "students",
     },
+
     {
       id: "experience",
       header: "Experience",
       accessorKey: "experience",
     },
+
     {
       id: "status",
       header: "Status",
@@ -111,6 +125,7 @@ export default function TutorTable() {
         </span>
       ),
     },
+
     {
       id: "actions",
       header: "Actions",
@@ -130,5 +145,14 @@ export default function TutorTable() {
     },
   ]
 
-  return <DataTable columns={columns} data={mockTutors} />
+  if (isLoading) {
+    return <p className="p-4">Loading tutors...</p>
+  }
+
+  return (
+    <DataTable<Tutor>
+      columns={columns}
+      data={tutors}
+    />
+  )
 }
